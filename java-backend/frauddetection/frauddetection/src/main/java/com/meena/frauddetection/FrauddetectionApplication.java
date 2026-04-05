@@ -27,7 +27,7 @@ public class FrauddetectionApplication {
 	public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
 		http
 			.csrf(csrf -> csrf.disable())
-			.cors(org.springframework.security.config.Customizer.withDefaults())
+			.cors(cors -> cors.configurationSource(corsConfigurationSource()))
 			.authorizeHttpRequests(auth -> auth
 				.anyRequest().permitAll()
 			);
@@ -35,15 +35,15 @@ public class FrauddetectionApplication {
 	}
 
 	@Bean
-	public WebMvcConfigurer corsConfigurer() {
-		return new WebMvcConfigurer() {
-			@Override
-			public void addCorsMappings(CorsRegistry registry) {
-				registry.addMapping("/**")
-						.allowedOrigins("*")
-						.allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
-						.allowedHeaders("*");
-			}
-		};
+	public org.springframework.web.cors.CorsConfigurationSource corsConfigurationSource() {
+		org.springframework.web.cors.CorsConfiguration config = new org.springframework.web.cors.CorsConfiguration();
+		config.setAllowedOrigins(java.util.Arrays.asList("*"));
+		config.setAllowedMethods(java.util.Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
+		config.setAllowedHeaders(java.util.Arrays.asList("*"));
+		config.setAllowCredentials(false);
+		
+		org.springframework.web.cors.UrlBasedCorsConfigurationSource source = new org.springframework.web.cors.UrlBasedCorsConfigurationSource();
+		source.registerCorsConfiguration("/**", config);
+		return source;
 	}
 }
