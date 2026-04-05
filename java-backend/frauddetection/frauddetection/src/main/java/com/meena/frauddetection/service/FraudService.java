@@ -13,8 +13,13 @@ import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.springframework.beans.factory.annotation.Value;
+
 @Service
 public class FraudService {
+
+    @Value("${ML_SERVICE_URL:http://localhost:8000/predict}")
+    private String mlServiceUrl;
 
     private final RestTemplate restTemplate = new RestTemplate();
 
@@ -49,7 +54,7 @@ public class FraudService {
         request.merch_lat = 36.01;
         request.merch_long = -82.04;
 
-        String url = "http://localhost:8000/predict";
+        String url = mlServiceUrl;
 
         try {
             // Using ParameterizedTypeReference to avoid "unchecked" warning
