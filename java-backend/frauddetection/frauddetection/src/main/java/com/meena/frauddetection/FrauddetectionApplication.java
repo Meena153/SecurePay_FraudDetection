@@ -29,6 +29,7 @@ public class FrauddetectionApplication {
 			.csrf(csrf -> csrf.disable())
 			.cors(cors -> cors.configurationSource(corsConfigurationSource()))
 			.authorizeHttpRequests(auth -> auth
+				.requestMatchers(org.springframework.http.HttpMethod.OPTIONS, "/**").permitAll()
 				.anyRequest().permitAll()
 			);
 		return http.build();
@@ -37,7 +38,10 @@ public class FrauddetectionApplication {
 	@Bean
 	public org.springframework.web.cors.CorsConfigurationSource corsConfigurationSource() {
 		org.springframework.web.cors.CorsConfiguration config = new org.springframework.web.cors.CorsConfiguration();
-		config.setAllowedOrigins(java.util.Arrays.asList("*"));
+		config.setAllowedOrigins(java.util.Arrays.asList(
+			"https://secure-pay-fraud-detection.vercel.app",
+			"*"
+		));
 		config.setAllowedMethods(java.util.Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
 		config.setAllowedHeaders(java.util.Arrays.asList("*"));
 		config.setAllowCredentials(false);
