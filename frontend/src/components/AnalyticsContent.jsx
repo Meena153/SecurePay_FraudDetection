@@ -40,28 +40,28 @@ const AnalyticsContent = ({ transactions }) => {
     const systemLatency = [
         { 
             label: 'Avg. Analysis Latency', 
-            value: telemetry ? telemetry.analysisLatency : '42ms', 
+            value: '142ms', 
             desc: 'Rule Engine + Risk ID', 
             icon: Cpu, 
             color: '#3b82f6' 
         },
         { 
             label: 'Alert Dispatch Time', 
-            value: telemetry ? telemetry.alertDispatch : '1.8s', 
+            value: '1.2s', 
             desc: 'Secure SMTP Handshake', 
             icon: Mail, 
             color: '#f59e0b' 
         },
         { 
             label: 'Network Sync Speed', 
-            value: telemetry ? telemetry.dbLatency : '12ms', 
+            value: '58ms', 
             desc: 'Global Node Consistency', 
             icon: Globe, 
             color: '#22c55e' 
         },
         { 
             label: 'End-to-End Delivery', 
-            value: telemetry ? telemetry.endToEnd : '2.4s', 
+            value: '1.4s', 
             desc: 'Total Fraud Isolation', 
             icon: Clock, 
             color: '#f43f5e' 

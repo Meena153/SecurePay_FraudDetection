@@ -2,18 +2,15 @@ import React from 'react';
 import { 
   X, Shield, AlertTriangle, CheckCircle, 
   MapPin, User, 
-  CreditCard, Calendar, ArrowRightLeft, 
-  Fingerprint, Smartphone, Mail, History
+  Smartphone, Mail, History, ArrowRightLeft
 } from 'lucide-react';
+import RevealableCell, { maskAccount, maskMobile } from './RevealableCell';
 
-const TransactionDetailModal = ({ transaction, isOpen, onClose, transactions = [] }) => {
+const TransactionDetailModal = ({ transaction, isOpen, onClose, transactions = [], user }) => {
   if (!isOpen || !transaction) return null;
 
-  const maskAccount = (acc) => {
-    if (!acc) return 'N/A';
-    const s = String(acc);
-    return s.length > 4 ? `XXXXXX${s.slice(-4)}` : s;
-  };
+  const isAdmin = user?.role === 'Admin';
+
 
   const userHistoryCount = transactions.filter(t => 
     t.senderId === transaction.senderId && t.transactionId !== transaction.transactionId
@@ -103,7 +100,22 @@ const TransactionDetailModal = ({ transaction, isOpen, onClose, transactions = [
               </h4>
               <div className="space-y-2">
                 <InfoRow label="ID" value={transaction.senderId} />
-                <InfoRow label="Account" value={maskAccount(transaction.senderAccount)} />
+                <div className="flex flex-col">
+                  <span className="text-[10px] text-muted-foreground uppercase font-bold tracking-tight">Mobile</span>
+                  <RevealableCell 
+                    value={transaction.senderMobile} 
+                    masked={maskMobile(transaction.senderMobile)} 
+                    isAdmin={isAdmin} 
+                  />
+                </div>
+                <div className="flex flex-col">
+                  <span className="text-[10px] text-muted-foreground uppercase font-bold tracking-tight">Account</span>
+                  <RevealableCell 
+                    value={transaction.senderAccount} 
+                    masked={maskAccount(transaction.senderAccount)} 
+                    isAdmin={isAdmin} 
+                  />
+                </div>
                 <InfoRow label="Location" value={transaction.senderLocation} icon={<MapPin className="w-3 h-3" />} />
                 <InfoRow label="Device" value={transaction.senderDevice} icon={<Smartphone className="w-3 h-3" />} />
                 <div className="flex items-center gap-2 mt-2 pt-2 border-t border-border/20">
@@ -121,7 +133,14 @@ const TransactionDetailModal = ({ transaction, isOpen, onClose, transactions = [
               </h4>
               <div className="space-y-2">
                 <InfoRow label="ID" value={transaction.receiverId} />
-                <InfoRow label="Account" value={maskAccount(transaction.receiverAccount)} />
+                <div className="flex flex-col">
+                  <span className="text-[10px] text-muted-foreground uppercase font-bold tracking-tight">Account</span>
+                  <RevealableCell 
+                    value={transaction.receiverAccount} 
+                    masked={maskAccount(transaction.receiverAccount)} 
+                    isAdmin={isAdmin} 
+                  />
+                </div>
                 <InfoRow label="Location" value={transaction.receiverLocation} icon={<MapPin className="w-3 h-3" />} />
               </div>
             </div>

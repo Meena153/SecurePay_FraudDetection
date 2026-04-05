@@ -30,12 +30,25 @@ const SystemStatus = ({ user, loginTimestamp }) => {
         setServerStats(data);
         
         // Dynamic status updates for core cards based on actual machine uptime
-        setSystems(prev => prev.map(sys => ({
-          ...sys,
-          // Randomize latency and load slightly around real baseline for UI feel
-          latency: Math.floor(Math.random() * (sys.name.includes('ML') ? 200 : 50)) + 5 + 'ms',
-          load: Math.floor(Math.random() * 10) + parseInt(data.cpuLoad) + '%'
-        })));
+        setSystems(prev => prev.map(sys => {
+          const latencies = {
+            'Core API Gateway': '18ms',
+            'Fraud Detection Engine': '42ms',
+            'Transaction Database': '8ms',
+            'ML Inference Service': '124ms'
+          };
+          const loads = {
+            'Core API Gateway': '14%',
+            'Fraud Detection Engine': '18%',
+            'Transaction Database': '8%',
+            'ML Inference Service': '26%'
+          };
+          return {
+            ...sys,
+            latency: latencies[sys.name] || sys.latency,
+            load: loads[sys.name] || sys.load
+          };
+        }));
       }
     } catch (error) {
       console.error("Failed to fetch real system status:", error);

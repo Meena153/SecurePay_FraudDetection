@@ -17,8 +17,7 @@ const Settings = ({ user, isRunning, setIsRunning, txSpeed, setTxSpeed }) => {
     });
 
     const [notifications, setNotifications] = useState({
-        email: true,
-        inApp: true
+        email: true
     });
 
     useEffect(() => {
@@ -194,7 +193,7 @@ const Settings = ({ user, isRunning, setIsRunning, txSpeed, setTxSpeed }) => {
                             <p className="text-xs text-muted-foreground leading-relaxed">
                                 Sensitive fields (mobile numbers, full account numbers) are masked by default
                                 for all users. {user?.role === 'Admin'
-                                    ? 'As an Admin, you can hover over any masked field in transaction tables to reveal the actual value.'
+                                    ? 'As an Admin, you can click the eye icon next to any masked field to reveal the actual sensitive data.'
                                     : 'Only Admin-role users can reveal masked data. Contact your administrator for elevated access.'}
                             </p>
                         </div>
@@ -297,12 +296,7 @@ const Settings = ({ user, isRunning, setIsRunning, txSpeed, setTxSpeed }) => {
                         onChange={user?.role === 'Admin' ? handleEmailToggle : () => {}}
                         icon={Mail}
                     />
-                    <Toggle
-                        label="In-App Alerts"
-                        enabled={notifications.inApp}
-                        onChange={user?.role === 'Admin' ? (val) => setNotifications({ ...notifications, inApp: val }) : () => {}}
-                        icon={Monitor}
-                    />
+                    {/* In-App Alerts toggle removed as sound functionality was deleted */}
                 </div>
             </section>
 

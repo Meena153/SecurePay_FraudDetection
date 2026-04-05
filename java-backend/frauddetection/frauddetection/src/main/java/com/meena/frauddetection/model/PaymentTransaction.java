@@ -25,6 +25,7 @@ public class PaymentTransaction {
     private String receiverLocation;
     private String authType;
     private String transactionTime;
+    private String senderEmail;
 
     private String riskLevel;
     private boolean isFraud;
@@ -119,4 +120,7 @@ public class PaymentTransaction {
 
     public String getReason() { return reason; }
     public void setReason(String reason) { this.reason = reason; }
+
+    public String getSenderEmail() { return senderEmail; }
+    public void setSenderEmail(String senderEmail) { this.senderEmail = senderEmail; }
 }

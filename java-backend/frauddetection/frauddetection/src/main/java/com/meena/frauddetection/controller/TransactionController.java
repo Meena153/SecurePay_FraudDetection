@@ -70,12 +70,19 @@ public class TransactionController {
         if (!isEmailAlertEnabled) return;
         
         String risk = tx.getRiskLevel();
-        if (risk != null && (risk.equalsIgnoreCase("HIGH") || risk.equalsIgnoreCase("MEDIUM"))) {
+        if (risk != null && (risk.equalsIgnoreCase("HIGH") || risk.equalsIgnoreCase("MEDIUM") || risk.equalsIgnoreCase("SAFE"))) {
             // ⏱️ Start timing for email dispatch telemetry
             long emailStartTime = System.currentTimeMillis();
             
+            // ✅ DYNAMIC ALERTING: 
+            // If the transaction has a specific email (from the user), send it there.
+            // Otherwise, send it to the system administrator dashboard email.
+            String finalRecipient = (tx.getSenderEmail() != null && !tx.getSenderEmail().trim().isEmpty()) 
+                                    ? tx.getSenderEmail() 
+                                    : alertRecipient;
+
             emailService.sendFraudAlert(
-                alertRecipient, 
+                finalRecipient, 
                 tx.getTransactionId(), 
                 tx.getAmount(), 
                 risk
@@ -137,15 +144,21 @@ public class TransactionController {
             
             // Generate amounts triggering rules: >50k (high risk), >20k (med risk)
             if (forceFraud) {
+                // HIGH RISK (Blocked)
                 mockTx.setAmount(51000.0 + random.nextInt(40000));
                 mockTx.setSenderDevice("Unrecognized VPN");
-                // Maybe suspicious time
                 if (random.nextDouble() > 0.5) {
                     mockTx.setTransactionTime("02:30 AM");
                 } else {
                     mockTx.setTransactionTime(timeFormat.format(new Date()));
                 }
+            } else if (random.nextDouble() < 0.2) {
+                // MEDIUM RISK (Suspicious - amount 20k-50k or new device)
+                mockTx.setAmount(21000.0 + random.nextInt(28000));
+                mockTx.setSenderDevice(random.nextDouble() > 0.5 ? "New Device" : "Authorized Device");
+                mockTx.setTransactionTime(timeFormat.format(new Date()));
             } else {
+                // SAFE (Approved)
                 mockTx.setAmount(100.0 + random.nextInt(19000));
                 mockTx.setSenderDevice("Authorized Device");
                 mockTx.setTransactionTime(timeFormat.format(new Date()));

@@ -60,10 +60,24 @@ public class EmailService {
                 "Time: %s",
                 transactionId, amount, timestamp
             );
-        } else {
-            subject = "Fraud Alert";
+        } else if (riskLevel.equalsIgnoreCase("SAFE")) {
+            subject = "✅ Transaction Notification: Processed Successfully";
             body = String.format(
-                "Info: A transaction with risk level %s has been detected.\n\n" +
+                "✅ TRANSACTION SUCCESSFUL\n\n" +
+                "Transaction Details:\n" +
+                "----------------------------\n" +
+                "Transaction ID : %s\n" +
+                "Amount         : ₹%.2f\n" +
+                "Risk Level     : SAFE / VERIFIED\n" +
+                "Status         : APPROVED\n\n" +
+                "System: Digital Banking Fraud Detection\n" +
+                "Time: %s",
+                transactionId, amount, timestamp
+            );
+        } else {
+            subject = "Fraud Alert / Transaction Info";
+            body = String.format(
+                "Info: A transaction with risk level %s has been processed.\n\n" +
                 "Transaction ID : %s\n" +
                 "Amount         : ₹%.2f\n" +
                 "Time: %s",
@@ -76,7 +90,7 @@ public class EmailService {
         
         try {
             mailSender.send(message);
-            System.out.println("Fraud Alert email sent successfully for transaction: " + transactionId);
+            System.out.println("✅ " + riskLevel + " Alert email sent successfully for transaction: " + transactionId);
         } catch (Exception e) {
             System.err.println("CRITICAL ERROR: Failed to send fraud alert email for transaction " + transactionId);
             System.err.println("Error message: " + e.getMessage());

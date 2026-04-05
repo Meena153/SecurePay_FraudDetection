@@ -195,35 +195,13 @@ const Dashboard = ({ user, loginTimestamp, onLogout }) => {
     await performAutoGeneration();
   };
 
-  const playAlertSound = () => {
-    try {
-      const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-      const oscillator = audioCtx.createOscillator();
-      const gainNode = audioCtx.createGain();
-
-      oscillator.type = 'sine';
-      oscillator.frequency.setValueAtTime(880, audioCtx.currentTime); // High-pitched A5
-      oscillator.frequency.exponentialRampToValueAtTime(440, audioCtx.currentTime + 0.5); // Descend to A4
-
-      gainNode.gain.setValueAtTime(0.2, audioCtx.currentTime);
-      gainNode.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.5);
-
-      oscillator.connect(gainNode);
-      gainNode.connect(audioCtx.destination);
-
-      oscillator.start();
-      oscillator.stop(audioCtx.currentTime + 0.5);
-    } catch (e) {
-      console.warn('Audio visualization blocked or failed', e);
-    }
-  };
 
   const handleTransactionAdded = (newTx) => {
     const txArray = Array.isArray(newTx) ? newTx : [newTx];
     const hasFraud = txArray.some(t => t.isFraud);
 
     if (hasFraud) {
-      playAlertSound();
+      // Sound alert removed as per user request
     }
 
     if (Array.isArray(newTx)) {
@@ -516,14 +494,14 @@ const Dashboard = ({ user, loginTimestamp, onLogout }) => {
                     </span>
                   </div>
                 </div>
-                <button
-                  onClick={handleRefresh}
-                  className="btn-secondary flex items-center gap-2"
-                  disabled={refreshing}
-                >
-                  <RefreshCw className={`w-4 h-4 ${refreshing ? 'animate-spin' : ''}`} />
-                  Refresh & Generate New
-                </button>
+                  <button
+                    onClick={handleRefresh}
+                    className="btn-secondary flex items-center gap-2"
+                    disabled={refreshing}
+                  >
+                    <RefreshCw className={`w-4 h-4 ${refreshing ? 'animate-spin' : ''}`} />
+                    Refresh & Generate New
+                  </button>
               </div>
 
               <div className="dashboard-grid mb-8">
@@ -813,6 +791,7 @@ const Dashboard = ({ user, loginTimestamp, onLogout }) => {
           isOpen={!!selectedTransaction}
           onClose={() => setSelectedTransaction(null)}
           transactions={transactions}
+          user={user}
         />
 
       </div>

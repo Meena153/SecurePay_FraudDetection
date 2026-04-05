@@ -15,14 +15,17 @@ public class AuthController {
     @Autowired
     private UserRepository userRepository;
 
+    @Autowired
+    private org.springframework.security.crypto.password.PasswordEncoder passwordEncoder;
+
     @PostConstruct
     public void init() {
         // Pre-populate with default users if table is empty
         if (userRepository.count() == 0) {
-            User admin = new User("Admin", "admin123", "fraudalerts123@gmail.com", "Admin", "ALL");
+            User admin = new User("Admin", passwordEncoder.encode("admin123"), "fraudalerts123@gmail.com", "Admin", "ALL");
             userRepository.save(admin);
 
-            User analyst = new User("analyst", "analyst123", "analyst@securepay.com", "Analyst", "READ_ONLY,VIEW_ALERTS");
+            User analyst = new User("analyst", passwordEncoder.encode("analyst123"), "analyst@securepay.com", "Analyst", "READ_ONLY,VIEW_ALERTS");
             userRepository.save(analyst);
         }
     }
@@ -42,7 +45,8 @@ public class AuthController {
              throw new RuntimeException("Username or email already exists");
         }
 
-        User newUser = new User(username, password, email, role, "READ_ONLY,VIEW_ALERTS");
+        // 🔐 HASHING: Encrypt before saving
+        User newUser = new User(username, passwordEncoder.encode(password), email, role, "READ_ONLY,VIEW_ALERTS");
         userRepository.save(newUser);
 
         // Map response
@@ -70,8 +74,12 @@ public class AuthController {
         }
 
         User user = userRepository.findByUsername(username)
-                .filter(u -> u.getPassword().equals(password))
                 .orElseThrow(() -> new RuntimeException("Invalid username or password"));
+        
+        // 🔐 SECURE MATCHING: Compare hashed password correctly
+        if (!passwordEncoder.matches(password, user.getPassword())) {
+             throw new RuntimeException("Invalid username or password");
+        }
 
         Map<String, Object> response = new HashMap<>();
         Map<String, String> userResponse = new HashMap<>();

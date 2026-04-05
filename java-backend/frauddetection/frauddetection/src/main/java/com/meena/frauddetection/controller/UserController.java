@@ -3,6 +3,7 @@ package com.meena.frauddetection.controller;
 import com.meena.frauddetection.model.User;
 import com.meena.frauddetection.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.*;
 import java.util.*;
 
@@ -11,11 +12,17 @@ import java.util.*;
 @CrossOrigin(origins = "*")
 public class UserController {
 
+    @Value("${app.auth.allow-signup:true}")
+    private boolean allowSignup;
+
     @Autowired
     private UserRepository userRepository;
 
     @Autowired
     private com.meena.frauddetection.service.EmailService emailService;
+
+    @Autowired
+    private org.springframework.security.crypto.password.PasswordEncoder passwordEncoder;
 
     @GetMapping
     public List<User> getAllUsers() {
@@ -24,12 +31,20 @@ public class UserController {
 
     @PostMapping
     public User createUser(@RequestBody User user) {
+        // 🔥 SECURITY CHECK: Block signup if the demo mode is turned OFF.
+        if (!allowSignup) {
+            throw new RuntimeException("Signup is currently disabled. Access restricted to authorized personnel only.");
+        }
+
         if (userRepository.existsByUsername(user.getUsername())) {
             throw new RuntimeException("Operational ID (Username) already registered in high-security registry.");
         }
         if (userRepository.existsByEmail(user.getEmail())) {
             throw new RuntimeException("Communication channel (Email) already assigned to another operative.");
         }
+
+        // 🔐 HASHING: Scramble the password for security
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
         
         User savedUser = userRepository.save(user);
         

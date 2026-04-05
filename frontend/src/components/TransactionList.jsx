@@ -1,42 +1,8 @@
 import React, { useState } from "react";
 import { AlertTriangle, CheckCircle, Info, ChevronRight, Eye, EyeOff } from "lucide-react";
+import RevealableCell, { maskMobile, maskAccount } from "./RevealableCell";
 
 /* ─── masking helpers ─────────────────────────────────────── */
-const maskMobile = (mobile) => {
-  if (!mobile) return "N/A";
-  const s = String(mobile);
-  if (s.length < 4) return s;
-  return `${s.slice(0, 2)}****${s.slice(-2)}`;
-};
-
-const maskAccount = (acc) => {
-  if (!acc) return "N/A";
-  const s = String(acc);
-  return s.length > 4 ? `XXXXXX${s.slice(-4)}` : s;
-};
-
-/* ─── Reveal toggle (Admin only) ─────────────────────────── */
-const RevealableCell = ({ value, masked, isAdmin }) => {
-  const [revealed, setRevealed] = useState(false);
-  if (!isAdmin) return <span className="text-sm font-mono opacity-70">{masked}</span>;
-  return (
-    <div className="flex items-center gap-1.5 group/reveal">
-      <span className={`text-sm font-mono opacity-70 transition-all duration-200 ${revealed ? '' : 'blur-[2px]'}`}>
-        {revealed ? value || "N/A" : masked}
-      </span>
-      <button
-        onClick={(e) => { e.stopPropagation(); setRevealed(p => !p); }}
-        title={revealed ? "Hide" : "Reveal"}
-        className="opacity-0 group-hover/reveal:opacity-100 transition-opacity p-0.5 rounded hover:bg-secondary/60"
-      >
-        {revealed
-          ? <EyeOff className="w-3 h-3 text-muted-foreground" />
-          : <Eye className="w-3 h-3 text-primary" />
-        }
-      </button>
-    </div>
-  );
-};
 
 /* ─── Main component ─────────────────────────────────────── */
 const TransactionList = ({ transactions, loading, onTransactionClick, user }) => {
@@ -69,13 +35,13 @@ const TransactionList = ({ transactions, loading, onTransactionClick, user }) =>
       {!isAdmin && (
         <div className="flex items-center gap-2 px-3 py-2 rounded-xl bg-secondary/30 border border-border/30 text-[10px] text-muted-foreground font-bold uppercase tracking-wide">
           <EyeOff className="w-3.5 h-3.5 shrink-0" />
-          Sensitive fields (mobile numbers) are masked. Admin role required to reveal.
+          Sensitive fields (mobile numbers) are masked & blurred. Admin authorization required to reveal full data.
         </div>
       )}
       {isAdmin && (
         <div className="flex items-center gap-2 px-3 py-2 rounded-xl bg-primary/5 border border-primary/20 text-[10px] text-primary font-bold uppercase tracking-wide">
           <Eye className="w-3.5 h-3.5 shrink-0" />
-          Admin view: hover over masked fields to reveal sensitive data.
+          Admin view: click the eye icon to reveal sensitive data.
         </div>
       )}
 
