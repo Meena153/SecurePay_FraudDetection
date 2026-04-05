@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { authAPI, contactAPI } from '../api';
 import { Shield, Lock, User, AlertCircle } from 'lucide-react';
 
-const Login = ({ onSuccess }) => {
+const Login = ({ onSuccess, onToggle }) => {
   const [formData, setFormData] = useState({ username: '', password: '' });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
@@ -126,14 +126,24 @@ const Login = ({ onSuccess }) => {
             {loading ? 'Signing in...' : 'Sign In'}
           </button>
 
-          <div className="text-center mt-6 pt-6 border-t border-border/40">
-            <p className="text-xs text-muted-foreground mb-3 uppercase tracking-widest font-bold">New Personnel?</p>
+          <div className="text-center mt-6 pt-6 border-t border-border/40 space-y-4">
+            <div className="space-y-1">
+              <p className="text-xs text-muted-foreground uppercase tracking-widest font-bold">New Personnel?</p>
+              <button 
+                type="button"
+                onClick={onToggle}
+                className="text-sm font-bold text-primary hover:text-primary/80 transition-colors underline underline-offset-4"
+              >
+                Register Admin Account
+              </button>
+            </div>
+            
             <button 
               type="button"
               onClick={() => setShowContactModal(true)}
-              className="text-sm font-bold text-primary hover:text-primary/80 transition-colors underline underline-offset-4"
+              className="text-[10px] font-black uppercase text-muted-foreground/60 hover:text-white transition-colors tracking-tight"
             >
-              Request System Access
+              Request Analyst Access (Manual Protocol)
             </button>
           </div>
 

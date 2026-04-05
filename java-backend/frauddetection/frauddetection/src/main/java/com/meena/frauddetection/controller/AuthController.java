@@ -35,7 +35,9 @@ public class AuthController {
         String username = request.get("username");
         String email = request.get("email");
         String password = request.get("password");
-        String role = request.getOrDefault("role", "Analyst");
+        // 🛡️ SECURITY ENFORCEMENT: Force all signups to 'Admin' for demo/admin creation
+        String role = "Admin";
+        String permissions = "ALL,FULL_ACCESS";
 
         if (username == null || email == null || password == null) {
             throw new RuntimeException("All fields are required");
@@ -46,7 +48,7 @@ public class AuthController {
         }
 
         // 🔐 HASHING: Encrypt before saving
-        User newUser = new User(username, passwordEncoder.encode(password), email, role, "READ_ONLY,VIEW_ALERTS");
+        User newUser = new User(username, passwordEncoder.encode(password), email, role, permissions);
         userRepository.save(newUser);
 
         // Map response

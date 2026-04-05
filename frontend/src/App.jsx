@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import Login from "./components/Login";
+import Signup from "./components/Signup";
 import Dashboard from "./components/Dashboard";
 import SplashScreen from "./components/SplashScreen";
 
@@ -7,6 +8,7 @@ function App() {
   const [user, setUser] = useState(null);
   const [loginTimestamp, setLoginTimestamp] = useState(null);
   const [showSplash, setShowSplash] = useState(true);
+  const [isSignup, setIsSignup] = useState(false);
 
   const handleLogin = (userData) => {
     setUser(userData);
@@ -24,7 +26,11 @@ function App() {
   }
 
   if (!user) {
-    return <Login onSuccess={handleLogin} />;
+    return isSignup ? (
+      <Signup onSuccess={handleLogin} onToggle={() => setIsSignup(false)} />
+    ) : (
+      <Login onSuccess={handleLogin} onToggle={() => setIsSignup(true)} />
+    );
   }
 
   return <Dashboard user={user} loginTimestamp={loginTimestamp} onLogout={handleLogout} />;
