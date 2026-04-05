@@ -24,7 +24,8 @@ const SystemStatus = ({ user, loginTimestamp }) => {
   const fetchRealStatus = async () => {
     setRefreshing(true);
     try {
-      const response = await fetch('http://localhost:8082/api/status/health');
+      const API_URL = import.meta.env.VITE_API_URL || "http://localhost:8082";
+      const response = await fetch(`${API_URL.replace(/\/$/, "")}/api/status/health`);
       if (response.ok) {
         const data = await response.json();
         setServerStats(data);

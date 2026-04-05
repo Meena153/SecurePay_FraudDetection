@@ -21,7 +21,8 @@ const AnalyticsContent = ({ transactions }) => {
     useEffect(() => {
         const fetchTelemetry = async () => {
             try {
-                const response = await fetch('http://localhost:8082/api/status/telemetry');
+                const API_URL = import.meta.env.VITE_API_URL || "http://localhost:8082";
+                const response = await fetch(`${API_URL.replace(/\/$/, "")}/api/status/telemetry`);
                 if (response.ok) {
                     const data = await response.json();
                     setTelemetry(data);
