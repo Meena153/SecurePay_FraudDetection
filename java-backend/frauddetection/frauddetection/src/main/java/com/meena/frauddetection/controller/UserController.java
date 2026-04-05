@@ -43,18 +43,22 @@ public class UserController {
             throw new RuntimeException("Communication channel (Email) already assigned to another operative.");
         }
 
-        // 🔐 HASHING: Scramble the password for security
+        // 🔐 HASHING: Encrypt the password correctly
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         
         User savedUser = userRepository.save(user);
         
         // Automated notification for new analysts/admins
-        emailService.sendWelcomeEmail(
-            savedUser.getEmail(), 
-            savedUser.getUsername(), 
-            savedUser.getRole(), 
-            savedUser.getPassword()
-        );
+        try {
+            emailService.sendWelcomeEmail(
+                savedUser.getEmail(), 
+                savedUser.getUsername(), 
+                savedUser.getRole(), 
+                "*******" // Hide hashed password in email body for security
+            );
+        } catch (Exception e) {
+            System.err.println(">>> ALERT: Personnel notification failed to send, but record was saved. Check SMTP logs.");
+        }
         
         return savedUser;
     }
@@ -66,8 +70,8 @@ public class UserController {
         
         user.setUsername(userDetails.getUsername());
         user.setEmail(userDetails.getEmail());
-        if (userDetails.getPassword() != null && !userDetails.getPassword().isEmpty()) {
-            user.setPassword(userDetails.getPassword());
+        if (userDetails.getPassword() != null && !userDetails.getPassword().isEmpty() && !userDetails.getPassword().startsWith("$2a$")) {
+            user.setPassword(passwordEncoder.encode(userDetails.getPassword()));
         }
         user.setRole(userDetails.getRole());
         user.setPermissions(userDetails.getPermissions());
