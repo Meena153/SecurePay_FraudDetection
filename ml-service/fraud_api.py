@@ -8,27 +8,44 @@ app = FastAPI()
 
 import os
 
-# Get the script's directory
-BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-MODEL_PATH = os.path.join(BASE_DIR, "fraud_test_model.pkl")
-
 # Load trained model
-try:
-    print(f"DEBUG: Python working directory: {os.getcwd()}")
-    print(f"DEBUG: Looking for model at: {MODEL_PATH}")
+def find_model_file():
+    possible_paths = [
+        "fraud_test_model.pkl",
+        "./ml-service/fraud_test_model.pkl",
+        "../ml-service/fraud_test_model.pkl",
+        "/app/ml-service/fraud_test_model.pkl",
+        "/app/fraud_test_model.pkl",
+        os.path.join(os.path.dirname(os.path.abspath(__file__)), "fraud_test_model.pkl")
+    ]
     
-    if os.path.exists(MODEL_PATH):
+    print(f"DEBUG: Scouring for model...")
+    for path in possible_paths:
+        if os.path.exists(path):
+            print(f"⚠️ FOUND: Model file located at: {path}")
+            return path
+            
+    # Recursive search (last resort)
+    for root, dirs, files in os.walk("/app"):
+        if "fraud_test_model.pkl" in files:
+            p = os.path.join(root, "fraud_test_model.pkl")
+            print(f"⚠️ DISCOVERED: Model file found via deep search at: {p}")
+            return p
+    return None
+
+MODEL_PATH = find_model_file()
+
+try:
+    if MODEL_PATH:
         file_size = os.path.getsize(MODEL_PATH)
-        print(f"DEBUG: Model file found! Size: {file_size} bytes")
-        
-        # Load the model
+        print(f"DEBUG: Model file size: {file_size} bytes")
         model = joblib.load(MODEL_PATH)
-        print("✅ SUCCESS: ML Model loaded successfully!")
+        print("✅ SYSTEM READY: ML Model loaded successfully!")
     else:
-        print(f"❌ CRITICAL: Model file NOT FOUND at: {MODEL_PATH}")
+        print(f"❌ FATAL: Model file NOT FOUND in environment scour.")
         model = None
 except Exception as e:
-    print(f"❌ ERROR: Exception during model load: {e}")
+    print(f"❌ FATAL: Exception during model load: {e}")
     model = None
 
 @app.get("/health")
