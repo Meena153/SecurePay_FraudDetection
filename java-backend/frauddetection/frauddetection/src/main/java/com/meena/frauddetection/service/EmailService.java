@@ -7,6 +7,7 @@ import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import jakarta.mail.internet.MimeMessage;
 import org.springframework.stereotype.Service;
+import org.springframework.scheduling.annotation.Async;
 
 @Service
 public class EmailService {
@@ -17,6 +18,7 @@ public class EmailService {
     @Value("${spring.mail.username}")
     private String fromEmail;
 
+    @Async
     public void sendFraudAlert(String to, String transactionId, double amount, String riskLevel) {
         SimpleMailMessage message = new SimpleMailMessage();
         message.setFrom(fromEmail);
@@ -98,6 +100,7 @@ public class EmailService {
         }
     }
 
+    @Async
     public void sendWelcomeEmail(String toEmail, String username, String role, String password) {
         MimeMessage mimeMessage = mailSender.createMimeMessage();
         

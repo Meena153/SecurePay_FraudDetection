@@ -6,11 +6,20 @@ from typing import Optional
 
 app = FastAPI()
 
+import os
+
+# Get the script's directory
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+MODEL_PATH = os.path.join(BASE_DIR, "fraud_test_model.pkl")
+
 # Load trained model
-# Note: Ensure fraud_test_model.pkl is in the same directory
 try:
-    model = joblib.load("fraud_test_model.pkl")
-    print("Model loaded successfully!")
+    if os.path.exists(MODEL_PATH):
+        model = joblib.load(MODEL_PATH)
+        print("Model loaded successfully from:", MODEL_PATH)
+    else:
+        print(f"Model file not found at: {MODEL_PATH}")
+        model = None
 except Exception as e:
     print(f"Error loading model: {e}")
     model = None
