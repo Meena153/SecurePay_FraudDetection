@@ -14,15 +14,32 @@ MODEL_PATH = os.path.join(BASE_DIR, "fraud_test_model.pkl")
 
 # Load trained model
 try:
+    print(f"DEBUG: Python working directory: {os.getcwd()}")
+    print(f"DEBUG: Looking for model at: {MODEL_PATH}")
+    
     if os.path.exists(MODEL_PATH):
+        file_size = os.path.getsize(MODEL_PATH)
+        print(f"DEBUG: Model file found! Size: {file_size} bytes")
+        
+        # Load the model
         model = joblib.load(MODEL_PATH)
-        print("Model loaded successfully from:", MODEL_PATH)
+        print("✅ SUCCESS: ML Model loaded successfully!")
     else:
-        print(f"Model file not found at: {MODEL_PATH}")
+        print(f"❌ CRITICAL: Model file NOT FOUND at: {MODEL_PATH}")
         model = None
 except Exception as e:
-    print(f"Error loading model: {e}")
+    print(f"❌ ERROR: Exception during model load: {e}")
     model = None
+
+@app.get("/health")
+def health():
+    return {
+        "status": "online",
+        "model_loaded": model is not None,
+        "base_dir": BASE_DIR,
+        "model_path": MODEL_PATH,
+        "file_exists": os.path.exists(MODEL_PATH)
+    }
 
 # Define request structure for validation and better IDE support
 class Transaction(BaseModel):
