@@ -1,0 +1,69 @@
+version: '3.8'
+
+services:
+  database:
+    image: mysql:8.0
+    container_name: securepay-db
+    environment:
+      MYSQL_DATABASE: fraud_db_secure
+      MYSQL_ROOT_PASSWORD: ${DB_PASSWORD:-Meena@164}
+    ports:
+      - "3306:3306"
+    volumes:
+      - db_data:/var/lib/mysql
+    networks:
+      - securepay-network
+    healthcheck:
+      test: ["CMD", "mysqladmin" ,"ping", "-h", "localhost"]
+      timeout: 20s
+      retries: 10
+
+  ml-service:
+    build: 
+      context: ./ml-service
+    container_name: securepay-ml
+    ports:
+      - "8000:8000"
+    networks:
+      - securepay-network
+    restart: unless-stopped
+
+  backend:
+    build: 
+      context: ./java-backend/frauddetection/frauddetection
+    container_name: securepay-backend
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:mysql://database:3306/fraud_db_secure?createDatabaseIfNotExist=true&useSSL=false&allowPublicKeyRetrieval=true
+      - SPRING_DATASOURCE_USERNAME=root
+      - SPRING_DATASOURCE_PASSWORD=${DB_PASSWORD:-Meena@164}
+      - ML_SERVICE_URL=http://ml-service:8000/predict
+      - SPRING_MAIL_PASSWORD=${MAIL_PASSWORD:-SECRET_REMOVED}
+    ports:
+      - "8082:8082"
+    depends_on:
+      database:
+        condition: service_healthy
+      ml-service:
+        condition: service_started
+    networks:
+      - securepay-network
+    restart: unless-stopped
+
+  frontend:
+    build: 
+      context: ./frontend
+    container_name: securepay-frontend
+    ports:
+      - "80:80"
+    depends_on:
+      - backend
+    networks:
+      - securepay-network
+    restart: unless-stopped
+
+networks:
+  securepay-network:
+    driver: bridge
+
+volumes:
+  db_data:
