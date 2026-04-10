@@ -16,6 +16,9 @@ public class AuthController {
     private UserRepository userRepository;
 
     @Autowired
+    private com.meena.frauddetection.service.EmailService emailService;
+
+    @Autowired
     private org.springframework.security.crypto.password.PasswordEncoder passwordEncoder;
 
     @PostConstruct
@@ -62,6 +65,18 @@ public class AuthController {
         
         response.put("user", userResponse);
         response.put("token", "mock-jwt-token-" + newUser.getId());
+
+        // 📧 Dispatch Welcome Email
+        try {
+            emailService.sendWelcomeEmail(
+                email, 
+                username, 
+                role, 
+                "*******" // Hash representation 
+            );
+        } catch (Exception e) {
+            System.err.println("Signup warning: Failed to send welcome email -> " + e.getMessage());
+        }
 
         return response;
     }

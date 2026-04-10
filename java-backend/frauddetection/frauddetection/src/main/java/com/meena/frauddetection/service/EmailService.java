@@ -94,7 +94,7 @@ public class EmailService {
             mailSender.send(message);
             System.out.println("✅ " + riskLevel + " Alert email sent successfully for transaction: " + transactionId);
         } catch (Exception e) {
-            System.err.println("⚠️ NETWORK FALLBACK: Could not dispatch email due to port restriction (Railway).");
+            System.err.println("⚠️ NETWORK FALLBACK: Could not dispatch email due to error: " + e.getMessage());
             System.out.println("----------------------------------------------");
             System.out.println("📫 SIMULATED ALERT: " + subject);
             System.out.println("RECIPIENT: " + to);
@@ -167,7 +167,7 @@ public class EmailService {
             mailSender.send(mimeMessage);
             System.out.println("HTML Welcome email sent successfully to: " + toEmail);
         } catch (Exception e) {
-            System.err.println("⚠️ NETWORK FALLBACK: Manual onboarding record generated for: " + username);
+            System.err.println("⚠️ NETWORK FALLBACK: Manual onboarding record generated for: " + username + " | Error: " + e.getMessage());
             System.out.println("----------------------------------------------");
             System.out.println("📫 SIMULATED WELCOME: Provisioned access for " + username + " (" + role + ")");
             System.out.println("----------------------------------------------");
