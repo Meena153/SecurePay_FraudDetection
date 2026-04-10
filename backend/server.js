@@ -4,7 +4,7 @@ const jwt = require('jsonwebtoken');
 
 const app = express();
 const PORT = 8081;
-const JWT_SECRET = 'super-secret-key-123';
+const JWT_SECRET = process.env.JWT_SECRET || 'dev-only-fallback-replace-in-prod';
 
 app.use(cors());
 app.use(express.json());
