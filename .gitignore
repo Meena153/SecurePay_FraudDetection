@@ -1,5 +1,37 @@
+# ===== SECRETS & CREDENTIALS (NEVER COMMIT) =====
+.env
+.env.*
+!.env.example
+*.env
 
-# ML generated artifacts
+# Spring Boot sensitive config
+**/src/main/resources/application-prod.properties
+**/src/main/resources/application-secrets.properties
+
+# Node backend env files
+backend/.env
+backend/.env.local
+
+# ML service env
+ml-service/.env
+
+# ===== ML GENERATED ARTIFACTS =====
 ml-service/fraud_test_model.pkl
 ml-service/__pycache__/
+**/__pycache__/
+*.pyc
+*.pyo
 
+# ===== BUILD ARTIFACTS =====
+**/target/
+**/node_modules/
+frontend/dist/
+frontend/build/
+
+# ===== LOGS =====
+*.log
+npm-debug.log*
+
+# ===== OS FILES =====
+.DS_Store
+Thumbs.db
