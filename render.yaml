@@ -1,0 +1,49 @@
+services:
+  # 1. Frontend (React/Vite)
+  - type: web
+    name: secure-pay-frontend
+    env: static
+    buildCommand: npm install && npm run build
+    staticPublishPath: dist
+    rootContext: frontend
+    envVars:
+      - key: VITE_API_URL
+        fromService:
+          type: web
+          name: secure-pay-backendHub
+          property: host
+
+  # 2. Backend Hub (Java Spring Boot)
+  - type: web
+    name: secure-pay-backendHub
+    env: docker
+    dockerContext: java-backend/frauddetection/frauddetection
+    dockerfilePath: java-backend/frauddetection/frauddetection/Dockerfile
+    plan: free
+    envVars:
+      - key: PORT
+        value: 8082
+      - key: SPRING_DATASOURCE_URL
+        sync: false 
+      - key: SPRING_DATASOURCE_USERNAME
+        sync: false
+      - key: SPRING_DATASOURCE_PASSWORD
+        sync: false
+      - key: ML_SERVICE_URL
+        fromService:
+          type: web
+          name: secure-pay-mlInference
+          property: host
+      - key: MAIL_USERNAME
+        sync: false
+      - key: MAIL_PASSWORD
+        sync: false
+
+  # 3. ML Inference Engine (Python FastAPI)
+  - type: web
+    name: secure-pay-mlInference
+    env: python
+    rootContext: ml-service
+    buildCommand: pip install -r requirements.txt
+    startCommand: uvicorn fraud_api:app --host 0.0.0.0 --port $PORT
+    plan: free
