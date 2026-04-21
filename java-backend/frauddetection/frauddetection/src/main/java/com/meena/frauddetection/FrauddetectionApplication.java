@@ -41,13 +41,10 @@ public class FrauddetectionApplication {
 	@Bean
 	public org.springframework.web.cors.CorsConfigurationSource corsConfigurationSource() {
 		org.springframework.web.cors.CorsConfiguration config = new org.springframework.web.cors.CorsConfiguration();
-		config.setAllowedOrigins(java.util.Arrays.asList(
-			"https://secure-pay-fraud-detection.vercel.app",
-			"*"
-		));
+		config.setAllowedOriginPatterns(java.util.Arrays.asList("*")); 
 		config.setAllowedMethods(java.util.Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
 		config.setAllowedHeaders(java.util.Arrays.asList("*"));
-		config.setAllowCredentials(false);
+		config.setAllowCredentials(true);
 		
 		org.springframework.web.cors.UrlBasedCorsConfigurationSource source = new org.springframework.web.cors.UrlBasedCorsConfigurationSource();
 		source.registerCorsConfiguration("/**", config);
