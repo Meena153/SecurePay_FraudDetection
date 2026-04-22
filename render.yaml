@@ -43,7 +43,7 @@ services:
   - type: web
     name: secure-pay-mlInference
     env: python
-    rootContext: ml-service
+    rootDir: ml-service
     buildCommand: pip install -r requirements.txt
     startCommand: uvicorn fraud_api:app --host 0.0.0.0 --port $PORT
     plan: free
