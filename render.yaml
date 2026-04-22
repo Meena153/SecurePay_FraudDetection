@@ -5,13 +5,12 @@ services:
     env: static
     buildCommand: npm install && npm run build
     staticPublishPath: dist
-    rootDir: frontend
+    # No rootDir here, we use cd commands for better compatibility
+    buildCommand: cd frontend && npm install && npm run build
+    staticPublishPath: frontend/dist
     envVars:
       - key: VITE_API_URL
-        fromService:
-          type: web
-          name: secure-pay-backendHub
-          property: host
+        sync: false # You will paste your Backend Public URL here
 
   # 2. Backend Hub (Java Spring Boot)
   - type: web
