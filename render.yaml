@@ -3,9 +3,7 @@ services:
   - type: web
     name: secure-pay-frontend
     env: static
-    buildCommand: npm install && npm run build
-    staticPublishPath: dist
-    # No rootDir here, we use cd commands for better compatibility
+    # We use cd commands for better compatibility
     buildCommand: cd frontend && npm install --legacy-peer-deps && npm run build
     staticPublishPath: frontend/dist
     envVars:
