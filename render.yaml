@@ -6,7 +6,7 @@ services:
     buildCommand: npm install && npm run build
     staticPublishPath: dist
     # No rootDir here, we use cd commands for better compatibility
-    buildCommand: cd frontend && npm install && npm run build
+    buildCommand: cd frontend && npm install --legacy-peer-deps && npm run build
     staticPublishPath: frontend/dist
     envVars:
       - key: VITE_API_URL
