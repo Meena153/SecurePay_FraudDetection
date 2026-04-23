@@ -39,9 +39,10 @@ const FraudMap = ({ transactions }) => {
   }, [transactions]);
 
   return (
-    <div className="glass-card p-6 flex flex-col h-full min-h-[660px] relative overflow-hidden">
+    <div className="glass-card p-4 sm:p-6 flex flex-col h-full min-h-[500px] sm:min-h-[660px] relative overflow-hidden">
+
       {/* Precision Map Header */}
-      <div className="flex items-center justify-between mb-8 pb-4 border-b border-white/5">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8 pb-4 border-b border-white/5">
         <div className="flex items-center gap-3">
           <div className="p-2 bg-secondary/10 rounded-lg border border-white/5">
             <ShieldCheck className="text-white/40 w-5 h-5" />
@@ -54,13 +55,14 @@ const FraudMap = ({ transactions }) => {
             </p>
           </div>
         </div>
-        <div className="flex items-center bg-black/20 px-3 py-1 rounded-md border border-white/5">
+        <div className="flex items-center bg-black/20 px-3 py-1 rounded-md border border-white/5 w-fit">
            <Zap size={10} className="text-primary mr-2" />
-           <p className="text-[10px] font-black text-white/40 uppercase tracking-tighter truncate max-w-[150px]">
+           <p className="text-[10px] font-black text-white/40 uppercase tracking-tighter truncate max-w-[200px]">
              Latest: <span className="text-white/80">{latestUpdate}</span>
            </p>
         </div>
       </div>
+
 
       {/* SVG Map (Neutral Dark Background + Point Colors Only) */}
       {/* FIXED: Added strict clipping and fixed height to prevent "Screen-wide" zoom feel */}
@@ -156,18 +158,18 @@ const FraudMap = ({ transactions }) => {
       </div>
 
       {/* Modern Status Legends */}
-      <div className="mt-6 grid grid-cols-1 md:grid-cols-4 gap-6">
-        <div className="glass-card !bg-white/5 p-4 flex items-center justify-between border border-white/5 rounded-2xl md:col-span-3">
-          <div className="flex gap-10">
+      <div className="mt-6 grid grid-cols-1 lg:grid-cols-4 gap-4">
+        <div className="glass-card !bg-white/5 p-4 flex flex-col sm:flex-row items-center justify-between border border-white/5 rounded-2xl lg:col-span-3 gap-4">
+          <div className="flex flex-wrap justify-center gap-4 sm:gap-10 w-full sm:w-auto">
             <div className="flex items-center gap-2">
               <div className="w-2 h-2 rounded-full bg-[#f43f5e]" /> 
               <span className="text-[10px] font-bold uppercase text-white/40">Critical</span>
             </div>
-            <div className="flex items-center gap-3">
+            <div className="flex items-center gap-2">
               <div className="w-2 h-2 rounded-full bg-[#f59e0b]" /> 
               <span className="text-[10px] font-bold uppercase text-white/40">Anomaly</span>
             </div>
-            <div className="flex items-center gap-3">
+            <div className="flex items-center gap-2">
               <div className="w-2 h-2 rounded-full bg-[#22c55e]" /> 
               <span className="text-[10px] font-bold uppercase text-white/40">Stable</span>
             </div>
@@ -175,13 +177,15 @@ const FraudMap = ({ transactions }) => {
           <p className="hidden xl:block text-[8px] text-white/20 font-bold uppercase tracking-widest">Precision Signal Point Distribution System</p>
         </div>
 
-        <div className="glass-card !bg-transparent p-4 border border-white/5 flex items-center gap-4 rounded-2xl">
+
+        <div className="glass-card !bg-transparent p-4 border border-white/5 flex items-center justify-center sm:justify-start gap-4 rounded-2xl">
           <div className="bg-white/5 p-2 rounded-lg border border-white/5">
             <Monitor className="text-white/20 w-4 h-4" />
           </div>
           <p className="text-[10px] font-bold text-white/40 uppercase tracking-tighter whitespace-nowrap">Zoom: x{position.zoom.toFixed(1)}</p>
         </div>
       </div>
+
     </div>
   );
 };

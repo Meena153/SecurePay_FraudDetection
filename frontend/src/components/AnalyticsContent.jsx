@@ -102,28 +102,29 @@ const AnalyticsContent = ({ transactions }) => {
                         <ShieldAlert className="w-5 h-5 text-destructive" />
                         Confidence Matrix
                     </h3>
-                    <div className="grid grid-cols-2 gap-2 relative">
-                        <div className="absolute -left-6 top-1/2 -rotate-90 text-[10px] font-black uppercase text-muted-foreground opacity-30">Actual</div>
+                    <div className="grid grid-cols-2 gap-2 relative mt-4">
+                        <div className="absolute -left-6 top-1/2 -rotate-90 text-[10px] font-black uppercase text-muted-foreground opacity-30 hidden sm:block">Actual</div>
                         <div className="absolute top-[-24px] left-1/2 -translate-x-1/2 text-[10px] font-black uppercase text-muted-foreground opacity-30">Predicted</div>
 
-                        <div className="aspect-square bg-success/10 border border-success/20 rounded-xl flex flex-col items-center justify-center p-4">
-                            <p className="text-2xl font-black text-success">98.8%</p>
-                            <p className="text-[9px] font-bold uppercase opacity-60">True Negative</p>
+                        <div className="aspect-square bg-success/10 border border-success/20 rounded-xl flex flex-col items-center justify-center p-2 sm:p-4 text-center">
+                            <p className="text-xl sm:text-2xl font-black text-success">98.8%</p>
+                            <p className="text-[8px] sm:text-[9px] font-bold uppercase opacity-60">True Neg</p>
                         </div>
-                        <div className="aspect-square bg-white/5 border border-border/10 rounded-xl flex flex-col items-center justify-center p-4">
-                            <p className="text-2xl font-black text-white/40">1.2%</p>
-                            <p className="text-[9px] font-bold uppercase opacity-40">False Positive</p>
+                        <div className="aspect-square bg-white/5 border border-border/10 rounded-xl flex flex-col items-center justify-center p-2 sm:p-4 text-center">
+                            <p className="text-xl sm:text-2xl font-black text-white/40">1.2%</p>
+                            <p className="text-[8px] sm:text-[9px] font-bold uppercase opacity-40">False Pos</p>
                         </div>
-                        <div className="aspect-square bg-white/5 border border-border/10 rounded-xl flex flex-col items-center justify-center p-4">
-                            <p className="text-2xl font-black text-white/40">0.8%</p>
-                            <p className="text-[9px] font-bold uppercase opacity-40">False Negative</p>
+                        <div className="aspect-square bg-white/5 border border-border/10 rounded-xl flex flex-col items-center justify-center p-2 sm:p-4 text-center">
+                            <p className="text-xl sm:text-2xl font-black text-white/40">0.8%</p>
+                            <p className="text-[8px] sm:text-[9px] font-bold uppercase opacity-40">False Neg</p>
                         </div>
-                        <div className="aspect-square bg-destructive/10 border border-destructive/20 rounded-xl flex flex-col items-center justify-center p-4">
-                            <p className="text-2xl font-black text-destructive">88.2%</p>
-                            <p className="text-[9px] font-bold uppercase opacity-60">True Positive</p>
+                        <div className="aspect-square bg-destructive/10 border border-destructive/20 rounded-xl flex flex-col items-center justify-center p-2 sm:p-4 text-center">
+                            <p className="text-xl sm:text-2xl font-black text-destructive">88.2%</p>
+                            <p className="text-[8px] sm:text-[9px] font-bold uppercase opacity-60">True Pos</p>
                         </div>
                     </div>
                 </div>
+
 
                 {/* Fraud by Mode Chart (SAFE COLOR UPDATED) */}
                 <div className="lg:col-span-2 glass-card p-6">
