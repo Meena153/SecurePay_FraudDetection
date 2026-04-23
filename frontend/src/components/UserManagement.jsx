@@ -272,7 +272,55 @@ const UserManagement = ({ currentUser }) => {
             </p>
           </div>
 
-          <div className="overflow-x-auto">
+          {/* Mobile View - Cards */}
+          <div className="grid grid-cols-1 gap-4 sm:hidden p-4">
+             {requests.length === 0 ? (
+               <div className="text-center py-8 text-muted-foreground text-xs uppercase font-black opacity-50 italic">
+                 No transmissions detected
+               </div>
+             ) : (
+               requests.map((r) => {
+                 const isSupportTicket = r.message?.startsWith('[SUPPORT TICKET]');
+                 const cleanMessage = isSupportTicket ? r.message.replace('[SUPPORT TICKET] ', '') : r.message;
+                 return (
+                   <div key={r.id} className={`glass-card p-4 space-y-4 relative border-l-4 ${
+                     r.status === 'PENDING' 
+                       ? (isSupportTicket ? 'border-l-primary' : 'border-l-warning') 
+                       : 'border-l-transparent'
+                   }`}>
+                      <div className="flex justify-between items-start">
+                        <div>
+                           <p className="text-sm font-bold">{r.name}</p>
+                           <p className="text-[10px] text-muted-foreground">{r.email}</p>
+                        </div>
+                        <span className={`px-2 py-0.5 rounded text-[8px] font-black tracking-widest border ${
+                          r.status === 'PENDING' ? 'text-warning bg-warning/10 border-warning/20' :
+                          r.status === 'PROCESSED' ? 'text-green-500 bg-green-500/10 border-green-500/20' :
+                          'text-destructive bg-destructive/10 border-destructive/20'
+                        }`}>
+                          {r.status}
+                        </span>
+                      </div>
+                      <div className="bg-secondary/20 p-3 rounded-lg border border-border/10">
+                        <p className="text-xs text-muted-foreground line-clamp-3 italic">"{cleanMessage}"</p>
+                      </div>
+                      <div className="flex flex-wrap gap-2 pt-2">
+                        {r.status === 'PENDING' && (
+                          <>
+                            <button onClick={() => handleApproveRequest(r)} className="flex-1 py-2 bg-primary/10 text-primary text-[9px] font-black uppercase rounded-lg border border-primary/20">Mod</button>
+                            <button onClick={() => handleQuickApprove(r)} className="flex-1 py-2 bg-green-500/10 text-green-500 text-[9px] font-black uppercase rounded-lg border border-green-500/20">Allow</button>
+                          </>
+                        )}
+                        <button onClick={() => openRequestDetail({...r, cleanMessage})} className="flex-1 py-2 bg-secondary text-muted-foreground text-[9px] font-black uppercase rounded-lg">Details</button>
+                        <button onClick={() => handleDeleteRequest(r.id)} className="p-2 bg-destructive/10 text-destructive rounded-lg border border-destructive/20"><Trash2 className="w-3.5 h-3.5" /></button>
+                      </div>
+                   </div>
+                 );
+               })
+             )}
+          </div>
+
+          <div className="hidden sm:block overflow-x-auto">
             <table className="w-full text-left">
               <thead>
                 <tr className="bg-secondary/40 border-b border-border/40 text-[10px] uppercase font-black tracking-widest text-muted-foreground/80">
@@ -411,6 +459,7 @@ const UserManagement = ({ currentUser }) => {
               </tbody>
             </table>
           </div>
+
         </div>
       )}
 
@@ -449,72 +498,116 @@ const UserManagement = ({ currentUser }) => {
           </p>
         </div>
 
-        <div className="overflow-x-auto">
-          <table className="w-full text-left">
-            <thead>
-              <tr className="bg-secondary/40 border-b border-border/40 text-[10px] uppercase font-black tracking-widest text-muted-foreground/80">
-                <th className="px-6 py-4">Identity</th>
-                <th className="px-6 py-4">Clearance Level</th>
-                <th className="px-6 py-4">Active Permissions</th>
-                <th className="px-6 py-4 text-right">Actions</th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-border/20">
-              {filteredUsers.map((u) => (
-                <tr key={u.id} className="hover:bg-primary/5 transition-colors group">
-                  <td className="px-6 py-4">
-                    <div className="flex items-center gap-3">
+          {/* Mobile View - Cards */}
+          <div className="grid grid-cols-1 gap-4 sm:hidden p-4">
+            {filteredUsers.map((u) => (
+              <div key={u.id} className="glass-card p-5 space-y-4 relative overflow-hidden">
+                <div className="flex justify-between items-start">
+                   <div className="flex items-center gap-3">
                       <div className="p-2 bg-secondary rounded-lg">
                         <User className={`w-4 h-4 ${u.role === 'Admin' ? 'text-primary' : 'text-muted-foreground'}`} />
                       </div>
                       <div>
                         <p className="text-sm font-bold text-foreground">{u.username}</p>
-                        <p className="text-[10px] text-muted-foreground font-medium uppercase tracking-tight">{u.email}</p>
+                        <p className="text-[10px] text-muted-foreground">{u.email}</p>
                       </div>
-                    </div>
-                  </td>
-                  <td className="px-6 py-4">
-                    <span className={`px-2 py-0.5 rounded text-[9px] font-bold tracking-widest border ${
+                   </div>
+                   <span className={`px-2 py-0.5 rounded text-[8px] font-bold tracking-widest border ${
                       u.role === 'Admin' 
                         ? 'text-primary bg-primary/10 border-primary/20' 
                         : 'text-warning bg-warning/10 border-warning/20'
                     }`}>
-                      LVL {u.role === 'Admin' ? '2 (ADMIN)' : '1 (ANALYST)'}
+                      {u.role?.toUpperCase()}
                     </span>
-                  </td>
-                  <td className="px-6 py-4">
-                    <div className="flex flex-wrap gap-1.5">
-                      {u.permissions?.split(',').map(p => (
-                        <span key={p} className="text-[8px] font-black uppercase tracking-tight text-muted-foreground bg-secondary/40 px-1.5 py-0.5 rounded">
-                          {p.trim()}
-                        </span>
-                      ))}
-                    </div>
-                  </td>
-                  <td className="px-6 py-4 text-right">
-                    <div className="flex items-center justify-end gap-2">
-                       <button 
-                        onClick={() => handleOpenModal(u)}
-                        className="p-1.5 hover:bg-primary/10 rounded-lg text-muted-foreground hover:text-primary transition-colors"
-                        title="Mod Clear Credentials"
-                      >
-                        <Edit3 className="w-4 h-4" />
-                      </button>
-                      <button 
-                        onClick={(e) => { e.stopPropagation(); handleDeleteClick(u); }}
-                        disabled={currentUser?.username === u.username}
-                        className="p-1.5 hover:bg-destructive/10 rounded-lg text-muted-foreground hover:text-destructive transition-colors disabled:opacity-30 disabled:cursor-not-allowed group/trash"
-                        title="Cancel Global Access"
-                      >
-                        <Trash2 className="w-4 h-4 pointer-events-none" />
-                      </button>
-                    </div>
-                  </td>
+                </div>
+                <div className="flex flex-wrap gap-1.5 pt-2">
+                   {u.permissions?.split(',').map(p => (
+                    <span key={p} className="text-[8px] font-black uppercase tracking-tight text-muted-foreground bg-secondary/40 px-1.5 py-0.5 rounded">
+                      {p.trim()}
+                    </span>
+                  ))}
+                </div>
+                <div className="flex gap-2 pt-4 border-t border-border/10">
+                   <button onClick={() => handleOpenModal(u)} className="flex-1 py-2 bg-primary/10 text-primary text-[9px] font-black uppercase rounded-lg">Edit</button>
+                   <button 
+                     onClick={() => handleDeleteClick(u)} 
+                     disabled={currentUser?.username === u.username}
+                     className="flex-1 py-2 bg-destructive/10 text-destructive text-[9px] font-black uppercase rounded-lg disabled:opacity-30"
+                   >
+                     Revoke
+                   </button>
+                </div>
+              </div>
+            ))}
+          </div>
+
+          <div className="hidden sm:block overflow-x-auto">
+            <table className="w-full text-left">
+              <thead>
+                <tr className="bg-secondary/40 border-b border-border/40 text-[10px] uppercase font-black tracking-widest text-muted-foreground/80">
+                  <th className="px-6 py-4">Identity</th>
+                  <th className="px-6 py-4">Clearance Level</th>
+                  <th className="px-6 py-4">Active Permissions</th>
+                  <th className="px-6 py-4 text-right">Actions</th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
+              </thead>
+              <tbody className="divide-y divide-border/20">
+                {filteredUsers.map((u) => (
+                  <tr key={u.id} className="hover:bg-primary/5 transition-colors group">
+                    <td className="px-6 py-4">
+                      <div className="flex items-center gap-3">
+                        <div className="p-2 bg-secondary rounded-lg">
+                          <User className={`w-4 h-4 ${u.role === 'Admin' ? 'text-primary' : 'text-muted-foreground'}`} />
+                        </div>
+                        <div>
+                          <p className="text-sm font-bold text-foreground">{u.username}</p>
+                          <p className="text-[10px] text-muted-foreground font-medium uppercase tracking-tight">{u.email}</p>
+                        </div>
+                      </div>
+                    </td>
+                    <td className="px-6 py-4">
+                      <span className={`px-2 py-0.5 rounded text-[9px] font-bold tracking-widest border ${
+                        u.role === 'Admin' 
+                          ? 'text-primary bg-primary/10 border-primary/20' 
+                          : 'text-warning bg-warning/10 border-warning/20'
+                      }`}>
+                        LVL {u.role === 'Admin' ? '2 (ADMIN)' : '1 (ANALYST)'}
+                      </span>
+                    </td>
+                    <td className="px-6 py-4">
+                      <div className="flex flex-wrap gap-1.5">
+                        {u.permissions?.split(',').map(p => (
+                          <span key={p} className="text-[8px] font-black uppercase tracking-tight text-muted-foreground bg-secondary/40 px-1.5 py-0.5 rounded">
+                            {p.trim()}
+                          </span>
+                        ))}
+                      </div>
+                    </td>
+                    <td className="px-6 py-4 text-right">
+                      <div className="flex items-center justify-end gap-2">
+                         <button 
+                          onClick={() => handleOpenModal(u)}
+                          className="p-1.5 hover:bg-primary/10 rounded-lg text-muted-foreground hover:text-primary transition-colors"
+                          title="Mod Clear Credentials"
+                        >
+                          <Edit3 className="w-4 h-4" />
+                        </button>
+                        <button 
+                          onClick={(e) => { e.stopPropagation(); handleDeleteClick(u); }}
+                          disabled={currentUser?.username === u.username}
+                          className="p-1.5 hover:bg-destructive/10 rounded-lg text-muted-foreground hover:text-destructive transition-colors disabled:opacity-30 disabled:cursor-not-allowed group/trash"
+                          title="Cancel Global Access"
+                        >
+                          <Trash2 className="w-4 h-4 pointer-events-none" />
+                        </button>
+                      </div>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+
       </div>
       )}
 

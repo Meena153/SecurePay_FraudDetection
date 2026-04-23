@@ -130,9 +130,56 @@ const Settings = ({ user, isRunning, setIsRunning, txSpeed, setTxSpeed }) => {
                     </div>
 
                     {/* Permission Matrix */}
-                    <div>
-                        <p className="text-[10px] font-black uppercase text-muted-foreground tracking-widest mb-4">Permission Matrix</p>
-                        <div className="overflow-x-auto rounded-xl border border-border/40">
+                    <div className="space-y-4">
+                        <p className="text-[10px] font-black uppercase text-muted-foreground tracking-widest mb-2">Permission Matrix</p>
+                        
+                        {/* Mobile View - List */}
+                        <div className="md:hidden space-y-3">
+                            {[
+                                { cap: 'View Dashboard & Metrics',       icon: BarChart2,  admin: true,  analyst: true  },
+                                { cap: 'View Transaction History',        icon: Database,   admin: true,  analyst: true  },
+                                { cap: 'View Fraud Alerts',              icon: AlertTriangle, admin: true, analyst: true },
+                                { cap: 'Reveal Masked Sensitive Data',   icon: Eye,        admin: true,  analyst: false },
+                                { cap: 'Toggle Email Alerts',            icon: Mail,       admin: true,  analyst: false },
+                                { cap: 'View & Export Audit Logs',       icon: Shield,     admin: true,  analyst: true  },
+                                { cap: 'Clear Audit Logs',              icon: Shield,     admin: true,  analyst: false },
+                                { cap: 'Start/Stop Simulation',         icon: Activity,   admin: true,  analyst: true  },
+                                { cap: 'Control Simulation Parameters', icon: Zap,        admin: true,  analyst: false },
+                                { cap: 'View System Infrastructure',    icon: Server,     admin: true,  analyst: false },
+                                { cap: 'Configure Notification Settings',icon: Bell,       admin: true,  analyst: false },
+                            ].map(({ cap, icon: Icon, admin, analyst }) => {
+                                const youHave = user?.role === 'Admin' ? admin : analyst;
+                                return (
+                                    <div key={cap} className={`p-4 rounded-xl border border-border/40 bg-secondary/20 flex flex-col gap-3 ${youHave ? '' : 'opacity-60'}`}>
+                                        <div className="flex items-center gap-3">
+                                            <div className="p-2 bg-background/50 rounded-lg shrink-0">
+                                                <Icon className="w-4 h-4 text-muted-foreground" />
+                                            </div>
+                                            <p className="text-xs font-bold text-foreground">{cap}</p>
+                                        </div>
+                                        <div className="flex items-center justify-between border-t border-border/10 pt-3">
+                                            <div className="flex items-center gap-4">
+                                                 <div className="flex flex-col items-center gap-1">
+                                                     <p className="text-[8px] font-black uppercase opacity-40">Admin</p>
+                                                     {admin ? <CheckCircle className="w-3.5 h-3.5 text-green-400" /> : <XCircle className="w-3.5 h-3.5 text-destructive" />}
+                                                 </div>
+                                                 <div className="flex flex-col items-center gap-1">
+                                                     <p className="text-[8px] font-black uppercase opacity-40">Analyst</p>
+                                                     {analyst ? <CheckCircle className="w-3.5 h-3.5 text-green-400" /> : <XCircle className="w-3.5 h-3.5 text-destructive" />}
+                                                 </div>
+                                            </div>
+                                            <div className="flex flex-col items-center gap-1">
+                                                <p className="text-[8px] font-black uppercase opacity-40">You</p>
+                                                {youHave ? <CheckCircle className="w-4 h-4 text-primary" /> : <XCircle className="w-4 h-4 text-destructive" />}
+                                            </div>
+                                        </div>
+                                    </div>
+                                );
+                            })}
+                        </div>
+
+                        {/* Desktop View - Table */}
+                        <div className="hidden md:block overflow-x-auto rounded-xl border border-border/40">
                             <table className="w-full text-sm">
                                 <thead>
                                     <tr className="bg-secondary/40 border-b border-border/40">
@@ -185,6 +232,7 @@ const Settings = ({ user, isRunning, setIsRunning, txSpeed, setTxSpeed }) => {
                         </div>
                     </div>
 
+
                     {/* Masked data notice */}
                     <div className="flex items-start gap-3 p-4 rounded-xl bg-secondary/30 border border-border/40">
                         <EyeOff className="w-5 h-5 text-muted-foreground shrink-0 mt-0.5" />
@@ -209,7 +257,7 @@ const Settings = ({ user, isRunning, setIsRunning, txSpeed, setTxSpeed }) => {
                     <h2 className="text-xl font-bold uppercase tracking-tight">Profile Settings</h2>
                 </div>
 
-                <form onSubmit={handleProfileUpdate} className="glass-card p-8 space-y-6">
+                <form onSubmit={handleProfileUpdate} className="glass-card p-4 sm:p-8 space-y-6">
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <div className="space-y-2">
                             <label className="text-[10px] font-black uppercase text-muted-foreground tracking-widest pl-1">Full Name</label>
@@ -269,12 +317,13 @@ const Settings = ({ user, isRunning, setIsRunning, txSpeed, setTxSpeed }) => {
                     </div>
 
                     <div className="flex justify-end pt-4">
-                        <button type="submit" className="btn-primary px-8 flex items-center gap-2">
+                        <button type="submit" className="btn-primary w-full sm:w-auto px-8 flex items-center justify-center gap-2">
                             <Save className="w-4 h-4" />
                             Update Profile
                         </button>
                     </div>
                 </form>
+
             </section>
 
             {/* Notification Settings */}

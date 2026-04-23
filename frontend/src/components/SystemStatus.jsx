@@ -94,28 +94,29 @@ const SystemStatus = ({ user, loginTimestamp }) => {
 
   return (
     <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
-      <div className="flex items-center justify-between">
-        <div className="flex items-center gap-4">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <div className="flex flex-col sm:flex-row sm:items-center gap-4">
           <div>
             <h2 className="text-2xl font-bold uppercase tracking-tight">System Infrastructure</h2>
             <p className="text-xs text-muted-foreground uppercase font-black tracking-widest mt-1">Real-time health monitoring</p>
           </div>
-          <div className="px-3 py-1 bg-primary/10 border border-primary/20 rounded-full flex items-center gap-2">
+          <div className="w-fit px-3 py-1 bg-primary/10 border border-primary/20 rounded-full flex items-center gap-2">
             <Timer className="w-3.5 h-3.5 text-primary" />
             <span className="text-[10px] font-black text-primary uppercase tracking-widest leading-none">
-              Active Session: {sessionUptime}
+              Active: {sessionUptime}
             </span>
           </div>
         </div>
         <button 
           onClick={handleRefresh} 
           disabled={refreshing}
-          className="btn-secondary flex items-center gap-2"
+          className="btn-secondary flex items-center justify-center gap-2"
         >
           <RefreshCw className={`w-4 h-4 ${refreshing ? 'animate-spin' : ''}`} />
           Force Diagnostics
         </button>
       </div>
+
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {systems.map((sys) => (
@@ -163,7 +164,8 @@ const SystemStatus = ({ user, loginTimestamp }) => {
         ))}
       </div>
 
-      <div className="glass-card p-8">
+      <div className="glass-card p-4 sm:p-8">
+
           <h3 className="text-lg font-bold mb-6 flex items-center gap-2">
             <Cpu className="w-5 h-5 text-primary" />
             Hardware Resource Utilization
@@ -177,7 +179,8 @@ const SystemStatus = ({ user, loginTimestamp }) => {
         </div>
 
 
-      <div className="glass-card p-8 bg-primary/5 border-primary/20">
+      <div className="glass-card p-4 sm:p-8 bg-primary/5 border-primary/20">
+
         <div className="flex items-center justify-between mb-4">
           <h3 className="text-lg font-bold flex items-center gap-2 text-primary">
             <Shield className="w-5 h-5" />

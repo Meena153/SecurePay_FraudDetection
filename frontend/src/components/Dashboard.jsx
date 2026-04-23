@@ -341,12 +341,12 @@ const Dashboard = ({ user, loginTimestamp, onLogout }) => {
 
         {/* Header */}
         <header className="glass-card rounded-none border-b border-border/40 sticky top-0 z-40 backdrop-blur-xl">
-          <div className="px-8 py-4">
-            <div className="flex items-center justify-between gap-4">
+          <div className="px-4 sm:px-8 py-3 sm:py-4">
+            <div className="flex items-center justify-between gap-2 sm:gap-4">
               <div className="flex items-center gap-2">
                 <button
                   onClick={() => setSidebarOpen(!sidebarOpen)}
-                  className="p-2.5 rounded-xl bg-secondary hover:bg-secondary/80 text-primary transition-all shadow-sm flex items-center justify-center shrink-0"
+                  className="p-2 rounded-xl bg-secondary hover:bg-secondary/80 text-primary transition-all shadow-sm flex items-center justify-center shrink-0"
                   title={sidebarOpen ? "Collapse Sidebar" : "Expand Sidebar"}
                 >
                   {sidebarOpen ? (
@@ -355,9 +355,12 @@ const Dashboard = ({ user, loginTimestamp, onLogout }) => {
                     <Menu className="w-5 h-5" />
                   )}
                 </button>
+                <div className="sm:hidden">
+                   <h2 className="text-base font-bold gradient-text truncate">{activeTab}</h2>
+                </div>
               </div>
 
-              <div className="flex items-center gap-4 min-w-0">
+              <div className="flex items-center gap-2 sm:gap-4 min-w-0">
                 <div className="text-right hidden sm:block border-r border-border/40 pr-4 lg:pr-6 shrink-0">
                   <h2 className="text-lg lg:text-xl font-bold gradient-text truncate">{activeTab}</h2>
                   <p className="text-[9px] lg:text-[10px] text-muted-foreground uppercase font-black tracking-wider leading-tight hidden xl:block">
@@ -371,14 +374,14 @@ const Dashboard = ({ user, loginTimestamp, onLogout }) => {
                   </p>
                 </div>
 
-                <div className="flex items-center gap-2 lg:gap-3 shrink-0">
-                  <div className="relative mr-2">
+                <div className="flex items-center gap-1.5 sm:gap-3 shrink-0">
+                  <div className="relative">
                     <button
                       onClick={() => setActiveTab('Fraud Alerts')}
                       className="p-2 rounded-xl bg-secondary hover:bg-secondary/80 transition-colors notification-btn"
                       title="View Fraud Alerts"
                     >
-                      <Bell className={`w-5 h-5 text-muted-foreground ${unreadAlerts > 0 ? 'notification-pulse text-destructive' : ''}`} />
+                      <Bell className={`w-4 h-4 sm:w-5 sm:h-5 text-muted-foreground ${unreadAlerts > 0 ? 'notification-pulse text-destructive' : ''}`} />
                       {unreadAlerts > 0 && (
                         <span className="notification-badge">
                           {unreadAlerts > 9 ? '9+' : unreadAlerts}
@@ -388,13 +391,13 @@ const Dashboard = ({ user, loginTimestamp, onLogout }) => {
                   </div>
 
                   {isAdmin && (
-                    <div className="relative mr-2">
+                    <div className="relative">
                       <button
                         onClick={() => setActiveTab('User Management')}
                         className="p-2 rounded-xl bg-secondary hover:bg-secondary/80 transition-colors notification-btn"
                         title="View Support & Access Requests"
                       >
-                        <MessageSquare className={`w-5 h-5 text-muted-foreground ${supportCount > 0 ? 'text-primary' : ''}`} />
+                        <MessageSquare className={`w-4 h-4 sm:w-5 sm:h-5 text-muted-foreground ${supportCount > 0 ? 'text-primary' : ''}`} />
                         {supportCount > 0 && (
                           <span className="notification-badge bg-primary">
                             {supportCount > 9 ? '9+' : supportCount}
@@ -404,18 +407,13 @@ const Dashboard = ({ user, loginTimestamp, onLogout }) => {
                     </div>
                   )}
 
-                  <div className="relative mr-2">
+                  <div className="relative">
                     <button
                       onClick={() => window.open("https://mail.google.com/mail/u/0/#inbox", "_blank")}
                       className="p-2 rounded-xl bg-secondary hover:bg-secondary/80 transition-colors notification-btn"
                       title="Open Gmail Inbox"
                     >
-                      <Mail className={`w-5 h-5 text-muted-foreground ${unreadAlerts > 0 ? 'text-destructive' : ''}`} />
-                      {unreadAlerts > 0 && (
-                        <span className="notification-badge bg-destructive">
-                          {unreadAlerts > 9 ? '9+' : unreadAlerts}
-                        </span>
-                      )}
+                      <Mail className={`w-4 h-4 sm:w-5 sm:h-5 text-muted-foreground ${unreadAlerts > 0 ? 'text-destructive' : ''}`} />
                     </button>
                   </div>
                   <div className="text-right hidden lg:block">
@@ -432,16 +430,17 @@ const Dashboard = ({ user, loginTimestamp, onLogout }) => {
 
                   <button
                     onClick={onLogout}
-                    className="btn-secondary p-2.5 flex items-center justify-center transition-all hover:bg-destructive/10 hover:text-destructive border-border/40"
+                    className="btn-secondary p-2 sm:p-2.5 flex items-center justify-center transition-all hover:bg-destructive/10 hover:text-destructive border-border/40"
                     title="Logout"
                   >
-                    <LogOut className="w-5 h-5" />
+                    <LogOut className="w-4 h-4 sm:w-5 sm:h-5" />
                   </button>
                 </div>
               </div>
             </div>
           </div>
         </header>
+
 
         {/* Main */}
         <main className="flex-1 w-full max-w-[1600px] mx-auto px-4 py-8 flex flex-col relative">
@@ -478,10 +477,10 @@ const Dashboard = ({ user, loginTimestamp, onLogout }) => {
           {/* Dashboard Tab */}
           {activeTab === 'Dashboard' && (
             <>
-              <div className="flex items-center justify-between mb-6">
-                <div className="flex items-center gap-4">
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
+                <div className="flex flex-wrap items-center gap-3 sm:gap-4">
                   <div className="flex items-center gap-3">
-                    <h2 className="text-2xl font-bold">Transaction Overview</h2>
+                    <h2 className="text-xl sm:text-2xl font-bold">Transaction Overview</h2>
                     <div className="flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-success/10 border border-success/20">
                       <span className="w-1.5 h-1.5 rounded-full bg-success animate-live-pulse" />
                       <span className="text-[10px] font-black text-success uppercase tracking-widest leading-none">Live</span>
@@ -496,11 +495,11 @@ const Dashboard = ({ user, loginTimestamp, onLogout }) => {
                 </div>
                   <button
                     onClick={handleRefresh}
-                    className="btn-secondary flex items-center gap-2"
+                    className="btn-secondary flex items-center justify-center gap-2 w-full sm:w-auto"
                     disabled={refreshing}
                   >
                     <RefreshCw className={`w-4 h-4 ${refreshing ? 'animate-spin' : ''}`} />
-                    Refresh & Generate New
+                    <span className="text-sm">Refresh & Generate</span>
                   </button>
               </div>
 

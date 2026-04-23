@@ -19,19 +19,19 @@ const MetricsCard = ({ title, value, icon: Icon, color, testId }) => {
 
   return (
     <div 
-      className={`metric-card glass-card p-6 bg-gradient-to-br ${colorMap[color] || colorMap.primary}`}
+      className={`metric-card glass-card p-4 sm:p-6 bg-gradient-to-br ${colorMap[color] || colorMap.primary}`}
       data-testid={testId}
     >
       <div className="flex items-start justify-between">
         <div>
-          <p className="text-sm text-muted-foreground mb-2">{title}</p>
-          <p className="text-3xl font-bold text-foreground" data-testid={`${testId}-value`}>
+          <p className="text-[10px] sm:text-sm text-muted-foreground mb-1 sm:mb-2 uppercase tracking-widest font-bold">{title}</p>
+          <p className="text-xl sm:text-3xl font-bold text-foreground" data-testid={`${testId}-value`}>
             {value}
           </p>
         </div>
 
-        <div className={`p-3 rounded-lg bg-background/50 ${iconColorMap[color]}`}>
-          <Icon className="w-6 h-6" />
+        <div className={`p-2 sm:p-3 rounded-lg bg-background/50 ${iconColorMap[color]}`}>
+          <Icon className="w-4 h-4 sm:w-6 sm:h-6" />
         </div>
       </div>
     </div>

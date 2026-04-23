@@ -30,7 +30,7 @@ const TransactionList = ({ transactions, loading, onTransactionClick, user }) =>
   }
 
   return (
-    <div className="space-y-2">
+    <div className="space-y-4">
       {/* Sensitive data notice */}
       {!isAdmin && (
         <div className="flex items-center gap-2 px-3 py-2 rounded-xl bg-secondary/30 border border-border/30 text-[10px] text-muted-foreground font-bold uppercase tracking-wide">
@@ -45,7 +45,8 @@ const TransactionList = ({ transactions, loading, onTransactionClick, user }) =>
         </div>
       )}
 
-      <div className="glass-card overflow-hidden !p-0 border border-border/40 shadow-2xl">
+      {/* Desktop Table View */}
+      <div className="hidden md:block glass-card overflow-hidden !p-0 border border-border/40 shadow-2xl">
         <div className="overflow-x-auto">
           <table className="w-full text-left border-collapse">
             <thead>
@@ -90,7 +91,6 @@ const TransactionList = ({ transactions, loading, onTransactionClick, user }) =>
                   <td className="px-6 py-4">
                     <span className="text-sm opacity-70 truncate max-w-[80px] block">{tx.senderId}</span>
                   </td>
-                  {/* ── Masked mobile ── */}
                   <td className="px-6 py-4" onClick={e => e.stopPropagation()}>
                     <RevealableCell
                       value={tx.senderMobile}
@@ -119,11 +119,6 @@ const TransactionList = ({ transactions, loading, onTransactionClick, user }) =>
                           Safe
                         </span>
                       )}
-                      {(tx.reason || tx.riskReason) && (
-                        <span className="text-[9px] text-muted-foreground font-semibold block leading-tight truncate max-w-[130px]" title={tx.reason || tx.riskReason}>
-                          {tx.reason || tx.riskReason}
-                        </span>
-                      )}
                     </div>
                   </td>
                   <td className="px-6 py-4 text-right">
@@ -131,12 +126,6 @@ const TransactionList = ({ transactions, loading, onTransactionClick, user }) =>
                       <span className={`text-sm font-bold ${tx.isFraud ? 'text-destructive' : tx.isMediumRisk ? 'text-warning' : 'text-accent'}`}>
                         {Math.round(tx.fraudScore * 100)}
                       </span>
-                      <div className="w-16 h-1 bg-secondary rounded-full mt-1 overflow-hidden">
-                        <div
-                          className={`h-full rounded-full ${tx.isFraud ? 'bg-destructive' : tx.isMediumRisk ? 'bg-warning' : 'bg-accent'}`}
-                          style={{ width: `${Math.min(100, tx.fraudScore * 100)}%` }}
-                        />
-                      </div>
                     </div>
                   </td>
                   <td className="px-4 py-4 text-center">
@@ -148,8 +137,76 @@ const TransactionList = ({ transactions, loading, onTransactionClick, user }) =>
           </table>
         </div>
       </div>
+
+      {/* Mobile Card View */}
+      <div className="grid grid-cols-1 gap-4 md:hidden">
+        {transactions.map((tx) => (
+          <div
+            key={tx.transactionId}
+            onClick={() => onTransactionClick && onTransactionClick(tx)}
+            className="glass-card p-5 space-y-4 relative overflow-hidden active:scale-[0.98] transition-transform"
+          >
+            <div className={`absolute top-0 left-0 w-1 h-full ${tx.isFraud ? 'bg-destructive' : tx.isMediumRisk ? 'bg-warning' : 'bg-accent'}`} />
+            
+            <div className="flex justify-between items-start">
+              <div>
+                <p className="text-[10px] font-black text-muted-foreground uppercase tracking-widest mb-1">TXID: {tx.transactionId}</p>
+                <div className="flex items-center gap-2">
+                   <span className={`px-2 py-0.5 rounded text-[10px] font-bold tracking-tight ${tx.transactionType === 'Credit' ? 'text-green-500 bg-green-500/10' : 'text-blue-500 bg-blue-500/10'}`}>
+                      {tx.transactionType?.toUpperCase()}
+                    </span>
+                    <span className="text-xs text-muted-foreground font-medium">{tx.transactionMode}</span>
+                </div>
+              </div>
+              <div className="text-right">
+                <p className="text-lg font-bold">₹{new Intl.NumberFormat('en-IN', { minimumFractionDigits: 0 }).format(tx.amount)}</p>
+                <div className={`text-[10px] font-bold uppercase px-2 py-0.5 rounded-full inline-block mt-1 ${
+                  tx.isFraud ? 'bg-destructive/10 text-destructive' : tx.isMediumRisk ? 'bg-warning/10 text-warning' : 'bg-accent/10 text-accent'
+                }`}>
+                  {tx.isFraud ? 'Fraud' : tx.isMediumRisk ? 'Medium Risk' : 'Safe'}
+                </div>
+              </div>
+            </div>
+
+            <div className="grid grid-cols-2 gap-4 pt-4 border-t border-border/20">
+              <div>
+                <p className="text-[9px] font-black text-muted-foreground uppercase tracking-tighter mb-1">Sender</p>
+                <p className="text-xs font-bold truncate">{tx.senderId}</p>
+                <div className="mt-1" onClick={e => e.stopPropagation()}>
+                   <RevealableCell
+                      value={tx.senderMobile}
+                      masked={maskMobile(tx.senderMobile)}
+                      isAdmin={isAdmin}
+                    />
+                </div>
+              </div>
+              <div>
+                <p className="text-[9px] font-black text-muted-foreground uppercase tracking-tighter mb-1">Receiver</p>
+                <p className="text-xs font-bold truncate">{tx.receiverId}</p>
+              </div>
+            </div>
+
+            <div className="flex items-center justify-between pt-2">
+               <div className="flex items-center gap-2">
+                  <span className="text-[10px] font-bold text-muted-foreground">Score</span>
+                  <div className="w-24 h-1.5 bg-secondary rounded-full overflow-hidden">
+                    <div
+                      className={`h-full rounded-full ${tx.isFraud ? 'bg-destructive' : tx.isMediumRisk ? 'bg-warning' : 'bg-accent'}`}
+                      style={{ width: `${Math.min(100, tx.fraudScore * 100)}%` }}
+                    />
+                  </div>
+                  <span className={`text-xs font-black ${tx.isFraud ? 'text-destructive' : tx.isMediumRisk ? 'text-warning' : 'text-accent'}`}>
+                    {Math.round(tx.fraudScore * 100)}
+                  </span>
+               </div>
+               <ChevronRight className="w-5 h-5 text-muted-foreground/30" />
+            </div>
+          </div>
+        ))}
+      </div>
     </div>
   );
+
 };
 
 export default TransactionList;

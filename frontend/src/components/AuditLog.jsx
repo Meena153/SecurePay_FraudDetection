@@ -230,7 +230,7 @@ const AuditLog = ({ user }) => {
     <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
 
       {/* ── Header ── */}
-      <div className="flex flex-wrap items-center justify-between gap-4">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div className="flex items-center gap-3">
           <div className="p-2.5 rounded-xl bg-primary/10">
             <Shield className="w-6 h-6 text-primary" />
@@ -247,15 +247,15 @@ const AuditLog = ({ user }) => {
           <button
             onClick={() => fetchLogs(true)}
             disabled={refreshing}
-            className="btn-secondary !py-2 !px-4 flex items-center gap-2 text-sm"
+            className="flex-1 sm:flex-none btn-secondary !py-2 !px-4 flex items-center justify-center gap-2 text-sm"
           >
             <RefreshCw className={`w-4 h-4 ${refreshing ? 'animate-spin' : ''}`} />
             Refresh
           </button>
-          <div className="relative" ref={dropdownRef}>
+          <div className="relative flex-1 sm:flex-none" ref={dropdownRef}>
             <button
               onClick={() => setExportOpen(!exportOpen)}
-              className="btn-secondary !py-2 !px-4 flex items-center gap-2 text-sm"
+              className="w-full btn-secondary !py-2 !px-4 flex items-center justify-center gap-2 text-sm"
             >
               <Download className="w-4 h-4" />
               Export
@@ -282,23 +282,25 @@ const AuditLog = ({ user }) => {
             <button
               onClick={handleClear}
               disabled={clearing}
-              className="flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-bold bg-destructive/10 text-destructive border border-destructive/20 hover:bg-destructive/20 transition-colors"
+              className="flex-1 sm:flex-none flex items-center justify-center gap-2 px-4 py-2 rounded-xl text-sm font-bold bg-destructive/10 text-destructive border border-destructive/20 hover:bg-destructive/20 transition-colors"
             >
               <Trash2 className="w-4 h-4" />
-              Clear Logs
+              Clear
             </button>
           )}
         </div>
       </div>
 
+
       {/* ── Stats strip ── */}
-      <div className="flex flex-wrap gap-3">
+      <div className="grid grid-cols-2 md:grid-cols-5 gap-3">
         <StatBadge label="Total Events"  value={stats.total}    color="border-border/40 text-foreground" />
         <StatBadge label="Critical"      value={stats.critical} color="border-red-400/20 text-red-400" />
         <StatBadge label="Warnings"      value={stats.warning}  color="border-yellow-400/20 text-yellow-400" />
         <StatBadge label="Auth Events"   value={stats.auth}     color="border-blue-400/20 text-blue-400" />
-        <StatBadge label="Config Changes"value={stats.settings} color="border-yellow-400/20 text-yellow-400" />
+        <StatBadge label="Config"        value={stats.settings} color="border-yellow-400/20 text-yellow-400" />
       </div>
+
 
       {/* ── Filters ── */}
       <div className="glass-card p-4 flex flex-wrap items-center gap-3">
@@ -315,13 +317,13 @@ const AuditLog = ({ user }) => {
         </div>
 
         {/* Category filter */}
-        <div className="flex items-center gap-1 flex-wrap">
-          <Filter className="w-3.5 h-3.5 text-muted-foreground mr-1" />
+        <div className="flex items-center gap-1 overflow-x-auto no-scrollbar pb-1 sm:pb-0">
+          <Filter className="w-3.5 h-3.5 text-muted-foreground mr-1 shrink-0" />
           {CATEGORIES.map(c => (
             <button
               key={c}
               onClick={() => setCatFilter(c)}
-              className={`px-2.5 py-1 rounded-lg text-[10px] font-black uppercase tracking-wider transition-all ${
+              className={`px-2.5 py-1 rounded-lg text-[10px] font-black uppercase tracking-wider transition-all whitespace-nowrap ${
                 catFilter === c
                   ? 'bg-primary text-primary-foreground shadow'
                   : 'text-muted-foreground hover:text-foreground bg-secondary/40'
@@ -331,6 +333,7 @@ const AuditLog = ({ user }) => {
             </button>
           ))}
         </div>
+
 
 
       </div>
