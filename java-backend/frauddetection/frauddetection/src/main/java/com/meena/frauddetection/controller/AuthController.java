@@ -26,9 +26,10 @@ public class AuthController {
         if (!userRepository.existsByUsername("Admin")) {
             User admin = new User("Admin", passwordEncoder.encode("admin123"), "fraudalerts123@gmail.com", "Admin", "ALL");
             userRepository.save(admin);
+            System.out.println("✅ Created default Admin account (Admin / admin123)");
         }
 
-        // Pre-populate with default analyst if table is mostly empty
+        // Ensure default analyst exists
         if (!userRepository.existsByUsername("analyst")) {
             User analyst = new User("analyst", passwordEncoder.encode("analyst123"), "analyst@securepay.com", "Analyst", "READ_ONLY,VIEW_ALERTS");
             userRepository.save(analyst);
