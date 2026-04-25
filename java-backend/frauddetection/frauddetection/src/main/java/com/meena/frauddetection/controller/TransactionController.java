@@ -76,6 +76,7 @@ public class TransactionController {
         if (!isEmailAlertEnabled) return;
         
         String risk = tx.getRiskLevel();
+        // Only send alerts for HIGH or MEDIUM risk transactions
         if (risk != null && (risk.equalsIgnoreCase("HIGH") || risk.equalsIgnoreCase("MEDIUM"))) {
             // ⏱️ Start timing for email dispatch telemetry
             long emailStartTime = System.currentTimeMillis();
@@ -90,10 +91,11 @@ public class TransactionController {
                 recipients.add(tx.getSenderEmail());
             }
 
-            // Add ALL registered admins
+            // Add ALL active registered admins
             List<String> adminEmails = new ArrayList<>(
                 userRepository.findAllByRole("Admin")
                     .stream()
+                    .filter(User::getIsActive) // ONLY notify currently logged in admins
                     .map(User::getEmail)
                     .collect(Collectors.toList())
             );

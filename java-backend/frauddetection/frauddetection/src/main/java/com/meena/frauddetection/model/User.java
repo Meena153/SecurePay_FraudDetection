@@ -23,7 +23,9 @@ public class User {
     private String role; // "Admin" or "Analyst"
 
     // Comma-separated permissions or specialized flags
-    private String permissions; 
+    private String permissions;
+
+    private boolean isActive = false; // true only while user is logged in
 
     public User() {}
 
@@ -52,4 +54,7 @@ public class User {
 
     public String getPermissions() { return permissions; }
     public void setPermissions(String permissions) { this.permissions = permissions; }
+
+    public boolean getIsActive() { return isActive; }
+    public void setIsActive(boolean isActive) { this.isActive = isActive; }
 }

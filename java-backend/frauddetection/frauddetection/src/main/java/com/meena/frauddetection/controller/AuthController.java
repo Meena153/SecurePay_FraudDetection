@@ -99,6 +99,10 @@ public class AuthController {
              throw new RuntimeException("Invalid username or password");
         }
 
+        // Mark user as active (logged in)
+        user.setIsActive(true);
+        userRepository.save(user);
+
         Map<String, Object> response = new HashMap<>();
         Map<String, String> userResponse = new HashMap<>();
         userResponse.put("id", String.valueOf(user.getId()));
@@ -110,6 +114,22 @@ public class AuthController {
         response.put("user", userResponse);
         response.put("token", "mock-jwt-token-" + user.getId());
 
+        return response;
+    }
+
+    @PostMapping("/logout")
+    public Map<String, Object> logout(@RequestBody Map<String, String> request) {
+        String username = request.get("username");
+        Map<String, Object> response = new HashMap<>();
+        if (username != null) {
+            userRepository.findByUsername(username).ifPresent(u -> {
+                u.setIsActive(false);
+                userRepository.save(u);
+            });
+            response.put("message", "Logged out successfully");
+        } else {
+            response.put("message", "No username provided");
+        }
         return response;
     }
 }
