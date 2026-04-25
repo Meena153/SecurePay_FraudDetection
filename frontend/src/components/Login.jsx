@@ -1,12 +1,13 @@
 import React, { useState } from 'react';
 import { authAPI, contactAPI } from '../api';
-import { Shield, Lock, User, AlertCircle } from 'lucide-react';
+import { Shield, Lock, User, AlertCircle, Eye, EyeOff } from 'lucide-react';
 
 const Login = ({ onSuccess, onToggle }) => {
   const [formData, setFormData] = useState({ username: '', password: '' });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [failedAttempts, setFailedAttempts] = useState(0);
+  const [showPassword, setShowPassword] = useState(false);
 
   // Access Request State
   const [showContactModal, setShowContactModal] = useState(false);
@@ -112,13 +113,20 @@ const Login = ({ onSuccess, onToggle }) => {
             <div className="relative">
               <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground"/>
               <input
-                type="password"
-                className="input-field !pl-10"
+                type={showPassword ? "text" : "password"}
+                className="input-field !pl-10 !pr-10"
                 placeholder="Enter password"
                 value={formData.password}
                 onChange={(e)=>setFormData({...formData,password:e.target.value})}
                 required
               />
+              <button
+                type="button"
+                onClick={() => setShowPassword(!showPassword)}
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-white transition-colors"
+              >
+                {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
+              </button>
             </div>
           </div>
 

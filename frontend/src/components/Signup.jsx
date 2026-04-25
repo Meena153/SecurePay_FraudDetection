@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { authAPI } from '../api';
-import { Shield, Lock, User, Mail, AlertCircle, CheckCircle } from 'lucide-react';
+import { Shield, Lock, User, Mail, AlertCircle, CheckCircle, Eye, EyeOff } from 'lucide-react';
 
 const Signup = ({ onSuccess, onToggle }) => {
   const [formData, setFormData] = useState({ 
@@ -12,6 +12,7 @@ const Signup = ({ onSuccess, onToggle }) => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [success, setSuccess] = useState(false);
+  const [showPassword, setShowPassword] = useState(true); // Unmasked by default for new admins
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -115,13 +116,20 @@ const Signup = ({ onSuccess, onToggle }) => {
             <div className="relative">
               <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground"/>
               <input
-                type="password"
-                className="input-field !pl-10 !py-2.5"
+                type={showPassword ? "text" : "password"}
+                className="input-field !pl-10 !pr-10 !py-2.5"
                 placeholder="Minimum 8 characters"
                 value={formData.password}
                 onChange={(e)=>setFormData({...formData, password:e.target.value})}
                 required
               />
+              <button
+                type="button"
+                onClick={() => setShowPassword(!showPassword)}
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-white transition-colors"
+              >
+                {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+              </button>
             </div>
           </div>
 
@@ -130,13 +138,20 @@ const Signup = ({ onSuccess, onToggle }) => {
             <div className="relative">
               <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground"/>
               <input
-                type="password"
-                className="input-field !pl-10 !py-2.5"
+                type={showPassword ? "text" : "password"}
+                className="input-field !pl-10 !pr-10 !py-2.5"
                 placeholder="Repeat password"
                 value={formData.confirmPassword}
                 onChange={(e)=>setFormData({...formData, confirmPassword:e.target.value})}
                 required
               />
+              <button
+                type="button"
+                onClick={() => setShowPassword(!showPassword)}
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-white transition-colors"
+              >
+                {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+              </button>
             </div>
           </div>
 
