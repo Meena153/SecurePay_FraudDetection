@@ -81,19 +81,20 @@ public class TransactionController {
             
             // ✅ DYNAMIC ALERTING: 
             // If the transaction has a specific email (from the user), send it there.
-            // Otherwise, send it to the registered system administrator email.
-            String finalRecipient = (tx.getSenderEmail() != null && !tx.getSenderEmail().trim().isEmpty()) 
-                                    ? tx.getSenderEmail() 
-                                    : userRepository.findFirstByRole("Admin")
-                                        .map(User::getEmail)
-                                        .orElse(alertRecipient);
+            // AND send it to ALL registered system administrators.
+            if (tx.getSenderEmail() != null && !tx.getSenderEmail().trim().isEmpty()) {
+                emailService.sendFraudAlert(tx.getSenderEmail(), tx.getTransactionId(), tx.getAmount(), risk);
+            }
 
-            emailService.sendFraudAlert(
-                finalRecipient, 
-                tx.getTransactionId(), 
-                tx.getAmount(), 
-                risk
-            );
+            // Fetch all admins and send them alerts
+            userRepository.findAllByRole("Admin").forEach(admin -> {
+                emailService.sendFraudAlert(
+                    admin.getEmail(), 
+                    tx.getTransactionId(), 
+                    tx.getAmount(), 
+                    risk
+                );
+            });
 
             // ⏱️ Record email dispatch latency
             long emailElapsed = System.currentTimeMillis() - emailStartTime;
