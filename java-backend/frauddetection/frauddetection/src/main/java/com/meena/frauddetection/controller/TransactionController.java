@@ -91,10 +91,12 @@ public class TransactionController {
             }
 
             // Add ALL registered admins
-            List<String> adminEmails = userRepository.findAllByRole("Admin")
-                .stream()
-                .map(User::getEmail)
-                .collect(Collectors.toList());
+            List<String> adminEmails = new ArrayList<>(
+                userRepository.findAllByRole("Admin")
+                    .stream()
+                    .map(User::getEmail)
+                    .collect(Collectors.toList())
+            );
 
             if (adminEmails.isEmpty()) {
                 adminEmails.add(alertRecipient); // fallback
