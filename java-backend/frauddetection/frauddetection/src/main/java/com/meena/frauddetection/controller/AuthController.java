@@ -72,7 +72,7 @@ public class AuthController {
                     email, 
                     username, 
                     role, 
-                    "*******" // Hash representation 
+                    password // Send actual password as requested
                 );
             } catch (Exception e) {
                 System.err.println("Signup warning: Failed to send welcome email -> " + e.getMessage());
