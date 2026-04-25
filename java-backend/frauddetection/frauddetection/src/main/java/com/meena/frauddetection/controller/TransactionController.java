@@ -1,10 +1,12 @@
 package com.meena.frauddetection.controller;
 
 import com.meena.frauddetection.model.PaymentTransaction;
+import com.meena.frauddetection.model.User;
 import com.meena.frauddetection.service.EmailService;
 import com.meena.frauddetection.service.PerformanceTracker;
 import com.meena.frauddetection.service.TransactionService;
 import com.meena.frauddetection.repository.TransactionRepository;
+import com.meena.frauddetection.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.*;
 
@@ -22,6 +24,7 @@ public class TransactionController {
     private final TransactionRepository transactionRepository;
     private final TransactionService transactionService;
     private final EmailService emailService;
+    private final UserRepository userRepository;
 
     @Value("${app.fraud.alert-recipient:fraudalerts123@gmail.com}")
     private String alertRecipient;
@@ -30,10 +33,12 @@ public class TransactionController {
 
     public TransactionController(TransactionRepository transactionRepository, 
                                  TransactionService transactionService,
-                                 EmailService emailService) {
+                                 EmailService emailService,
+                                 UserRepository userRepository) {
         this.transactionRepository = transactionRepository;
         this.transactionService = transactionService;
         this.emailService = emailService;
+        this.userRepository = userRepository;
     }
 
     @PostMapping("/settings/email-alerts")
@@ -76,10 +81,12 @@ public class TransactionController {
             
             // ✅ DYNAMIC ALERTING: 
             // If the transaction has a specific email (from the user), send it there.
-            // Otherwise, send it to the system administrator dashboard email.
+            // Otherwise, send it to the registered system administrator email.
             String finalRecipient = (tx.getSenderEmail() != null && !tx.getSenderEmail().trim().isEmpty()) 
                                     ? tx.getSenderEmail() 
-                                    : alertRecipient;
+                                    : userRepository.findFirstByRole("Admin")
+                                        .map(User::getEmail)
+                                        .orElse(alertRecipient);
 
             emailService.sendFraudAlert(
                 finalRecipient, 
