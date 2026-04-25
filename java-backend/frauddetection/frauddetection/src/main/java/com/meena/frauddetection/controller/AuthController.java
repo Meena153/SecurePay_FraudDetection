@@ -22,11 +22,14 @@ public class AuthController {
 
     @PostConstruct
     public void init() {
-        // Pre-populate with default users if table is empty
-        if (userRepository.count() == 0) {
+        // Ensure default Admin user always exists
+        if (!userRepository.existsByUsername("Admin")) {
             User admin = new User("Admin", passwordEncoder.encode("admin123"), "fraudalerts123@gmail.com", "Admin", "ALL");
             userRepository.save(admin);
+        }
 
+        // Pre-populate with default analyst if table is mostly empty
+        if (!userRepository.existsByUsername("analyst")) {
             User analyst = new User("analyst", passwordEncoder.encode("analyst123"), "analyst@securepay.com", "Analyst", "READ_ONLY,VIEW_ALERTS");
             userRepository.save(analyst);
         }
