@@ -156,7 +156,12 @@ const Signup = ({ onSuccess, onToggle }) => {
           </div>
 
           <button type="submit" disabled={loading || success} className="btn-primary w-full mt-4 py-3 flex items-center justify-center gap-2">
-            {loading ? 'Securing Credentials...' : (
+            {loading ? (
+              <span className="flex flex-col items-center">
+                <span>Securing Credentials...</span>
+                <span className="text-[10px] opacity-70 animate-pulse">Server may be waking up (30-60s)</span>
+              </span>
+            ) : (
               <>
                 <Shield className="w-4 h-4" />
                 Initialize Admin Account
