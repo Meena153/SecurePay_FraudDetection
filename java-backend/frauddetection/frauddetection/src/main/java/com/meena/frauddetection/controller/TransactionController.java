@@ -76,7 +76,7 @@ public class TransactionController {
         if (!isEmailAlertEnabled) return;
         
         String risk = tx.getRiskLevel();
-        if (risk != null && (risk.equalsIgnoreCase("HIGH") || risk.equalsIgnoreCase("MEDIUM") || risk.equalsIgnoreCase("SAFE"))) {
+        if (risk != null && (risk.equalsIgnoreCase("HIGH") || risk.equalsIgnoreCase("MEDIUM"))) {
             // ⏱️ Start timing for email dispatch telemetry
             long emailStartTime = System.currentTimeMillis();
             
