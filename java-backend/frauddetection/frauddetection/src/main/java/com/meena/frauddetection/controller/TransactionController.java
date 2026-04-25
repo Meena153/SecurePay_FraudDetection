@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
+import java.util.stream.Collectors;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -79,22 +80,42 @@ public class TransactionController {
             // ⏱️ Start timing for email dispatch telemetry
             long emailStartTime = System.currentTimeMillis();
             
-            // ✅ DYNAMIC ALERTING: 
-            // If the transaction has a specific email (from the user), send it there.
-            // AND send it to ALL registered system administrators.
+            // ✅ DYNAMIC ALERTING:
+            // If the transaction has a sender email, notify them.
+            // Also notify ALL registered admin accounts.
+            List<String> recipients = new ArrayList<>();
+
+            // Add sender email if present
             if (tx.getSenderEmail() != null && !tx.getSenderEmail().trim().isEmpty()) {
-                emailService.sendFraudAlert(tx.getSenderEmail(), tx.getTransactionId(), tx.getAmount(), risk);
+                recipients.add(tx.getSenderEmail());
             }
 
-            // Fetch all admins and send them alerts
-            userRepository.findAllByRole("Admin").forEach(admin -> {
+            // Add ALL registered admins
+            List<String> adminEmails = userRepository.findAllByRole("Admin")
+                .stream()
+                .map(User::getEmail)
+                .collect(Collectors.toList());
+
+            if (adminEmails.isEmpty()) {
+                adminEmails.add(alertRecipient); // fallback
+            }
+
+            // Merge without duplicates
+            for (String adminEmail : adminEmails) {
+                if (!recipients.contains(adminEmail)) {
+                    recipients.add(adminEmail);
+                }
+            }
+
+            // Send alert to each recipient
+            for (String recipient : recipients) {
                 emailService.sendFraudAlert(
-                    admin.getEmail(), 
-                    tx.getTransactionId(), 
-                    tx.getAmount(), 
+                    recipient,
+                    tx.getTransactionId(),
+                    tx.getAmount(),
                     risk
                 );
-            });
+            }
 
             // ⏱️ Record email dispatch latency
             long emailElapsed = System.currentTimeMillis() - emailStartTime;
