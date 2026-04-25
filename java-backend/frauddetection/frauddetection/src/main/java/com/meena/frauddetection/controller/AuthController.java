@@ -98,9 +98,11 @@ public class AuthController {
         User user = userRepository.findByUsername(username)
                 .orElseThrow(() -> new RuntimeException("Invalid username or password"));
         
-        // 🔐 SECURE MATCHING: Compare hashed password correctly
+        // 🔐 SECURE MATCHING: Compare hashed password correctly, but allow plain text fallback for older accounts
         if (!passwordEncoder.matches(password, user.getPassword())) {
-             throw new RuntimeException("Invalid username or password");
+             if (!password.equals(user.getPassword())) {
+                 throw new RuntimeException("Invalid username or password");
+             }
         }
 
         // Mark user as active (logged in)
