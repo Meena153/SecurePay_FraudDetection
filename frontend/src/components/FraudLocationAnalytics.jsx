@@ -32,7 +32,7 @@ const FraudLocationAnalytics = ({ transactions }) => {
     // Risk Driver Analysis (Why are they being flagged?)
     const riskDrivers = useMemo(() => {
         const counts = { amount: 0, location: 0, device: 0, time: 0 };
-        const riskyOnes = transactions.slice(0, 100).filter(t => t.isFraud || t.isMediumRisk);
+        const riskyOnes = transactions.slice(0, 100).filter(t => t.riskLevel === 'HIGH' || t.riskLevel === 'MEDIUM' || t.isFraud === true || t.iFraud === true || t.isMediumRisk === true || t.iMediumRisk === true);
         
         riskyOnes.forEach(tx => {
             if (tx.amount > 20000) counts.amount++;

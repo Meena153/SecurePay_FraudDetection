@@ -219,8 +219,8 @@ const Dashboard = ({ user, loginTimestamp, onLogout }) => {
     }
   };
 
-  const totalFraudCount = transactions.filter(t => t.isFraud).length;
-  const mediumRiskCount = transactions.filter(t => t.isMediumRisk).length;
+  const totalFraudCount = transactions.filter(t => t.riskLevel === 'HIGH' || t.isFraud === true || t.iFraud === true).length;
+  const mediumRiskCount = transactions.filter(t => t.riskLevel === 'MEDIUM' || t.isMediumRisk === true || t.iMediumRisk === true).length;
   const totalAlertsCount = totalFraudCount + mediumRiskCount;
   const unreadAlerts = Math.max(0, totalAlertsCount - lastSeenFraudCount);
 
@@ -240,10 +240,9 @@ const Dashboard = ({ user, loginTimestamp, onLogout }) => {
   }, [transactions, totalAlertsCount]);
 
   const fraudCount = totalFraudCount; // Keep for metrics
-  const safeCount = transactions.filter(t => !t.isFraud && !t.isMediumRisk).length;
-  const totalAmount = transactions.reduce((sum, t) => sum + (t.amount || 0), 0);
+  const safeCount = transactions.length - totalFraudCount - mediumRiskCount;
   const fraudAmount = transactions
-    .filter(t => t.isFraud)
+    .filter(t => t.riskLevel === 'HIGH' || t.isFraud === true || t.iFraud === true)
     .reduce((sum, t) => sum + (t.amount || 0), 0);
 
   const fraudPercentage = transactions.length > 0 
@@ -533,9 +532,12 @@ const Dashboard = ({ user, loginTimestamp, onLogout }) => {
           {activeTab === 'Transaction History' && (() => {
             const filtered = transactions
               .filter(t => {
-                if (historyFilter === 'Safe')   return t.riskLevel === 'SAFE'   || (!t.isFraud && !t.isMediumRisk);
-                if (historyFilter === 'Medium') return t.riskLevel === 'MEDIUM' || t.isMediumRisk;
-                if (historyFilter === 'Fraud')  return t.riskLevel === 'HIGH'   || t.isFraud;
+                const isHigh = t.riskLevel === 'HIGH' || t.isFraud === true || t.iFraud === true;
+                const isMed = t.riskLevel === 'MEDIUM' || t.isMediumRisk === true || t.iMediumRisk === true;
+                
+                if (historyFilter === 'Safe')   return !isHigh && !isMed;
+                if (historyFilter === 'Medium') return isMed;
+                if (historyFilter === 'Fraud')  return isHigh;
                 return true;
               })
               .filter(t => {
@@ -631,10 +633,17 @@ const Dashboard = ({ user, loginTimestamp, onLogout }) => {
           {/* Fraud Alerts Tab */}
           {activeTab === 'Fraud Alerts' && (() => {
             const filtered = transactions
-              .filter(t => t.isFraud || t.isMediumRisk)
               .filter(t => {
-                if (historyFilter === 'Medium') return t.isMediumRisk;
-                if (historyFilter === 'Fraud') return t.isFraud;
+                const isHigh = t.riskLevel === 'HIGH' || t.isFraud === true || t.iFraud === true;
+                const isMed = t.riskLevel === 'MEDIUM' || t.isMediumRisk === true || t.iMediumRisk === true;
+                return isHigh || isMed;
+              })
+              .filter(t => {
+                const isHigh = t.riskLevel === 'HIGH' || t.isFraud === true || t.iFraud === true;
+                const isMed = t.riskLevel === 'MEDIUM' || t.isMediumRisk === true || t.iMediumRisk === true;
+
+                if (historyFilter === 'Medium') return isMed;
+                if (historyFilter === 'Fraud') return isHigh;
                 return true;
               })
               .filter(t => {

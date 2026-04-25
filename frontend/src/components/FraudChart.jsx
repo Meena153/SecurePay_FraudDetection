@@ -17,9 +17,9 @@ import {
 
 const FraudChart = ({ transactions }) => {
 
-  const fraudCount = transactions.filter(t => t.isFraud).length;
-  const mediumRiskCount = transactions.filter(t => t.isMediumRisk).length;
-  const safeCount = transactions.filter(t => !t.isFraud && !t.isMediumRisk).length;
+  const fraudCount = transactions.filter(t => t.riskLevel === 'HIGH' || t.isFraud === true || t.iFraud === true).length;
+  const mediumRiskCount = transactions.filter(t => t.riskLevel === 'MEDIUM' || t.isMediumRisk === true || t.iMediumRisk === true).length;
+  const safeCount = transactions.length - fraudCount - mediumRiskCount;
 
   const pieData = [
     { name: 'Safe', value: safeCount, color: '#3fb158' },

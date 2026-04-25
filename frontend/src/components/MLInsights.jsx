@@ -23,7 +23,7 @@ const MLInsights = ({ transactions }) => {
     const matches = transactions.filter(t => {
       const mlRaw = t.prediction || (t.fraudScore > 0.7 ? 'FRAUD' : (t.fraudScore > 0.3 ? 'MEDIUM RISK' : 'SAFE'));
       const mlPred = normalizePrediction(mlRaw);
-      const rulePred = t.isFraud ? 'FRAUD' : (t.isMediumRisk ? 'MEDIUM RISK' : 'SAFE');
+      const rulePred = (t.riskLevel === 'HIGH' || t.isFraud) ? 'FRAUD' : ((t.riskLevel === 'MEDIUM' || t.isMediumRisk) ? 'MEDIUM RISK' : 'SAFE');
       return mlPred === rulePred;
     }).length;
 
@@ -41,7 +41,7 @@ const MLInsights = ({ transactions }) => {
 
   const mlRaw = latestTx ? (latestTx.prediction || (latestTx.fraudScore > 0.7 ? 'FRAUD' : latestTx.fraudScore > 0.3 ? 'MEDIUM RISK' : 'SAFE')) : 'N/A';
   const mlPred = normalizePrediction(mlRaw);
-  const rulePred = latestTx ? (latestTx.isFraud ? 'FRAUD' : latestTx.isMediumRisk ? 'MEDIUM RISK' : 'SAFE') : 'N/A';
+  const rulePred = latestTx ? ((latestTx.riskLevel === 'HIGH' || latestTx.isFraud === true || latestTx.iFraud === true) ? 'FRAUD' : (latestTx.riskLevel === 'MEDIUM' || latestTx.isMediumRisk === true || latestTx.iMediumRisk === true) ? 'MEDIUM RISK' : 'SAFE') : 'N/A';
   const isMatch = latestTx ? (mlPred === rulePred) : true;
 
 
