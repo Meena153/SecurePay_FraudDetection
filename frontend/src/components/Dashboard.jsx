@@ -65,6 +65,14 @@ const Dashboard = ({ user, loginTimestamp, onLogout }) => {
   const [selectedTransaction, setSelectedTransaction] = useState(null);
   const [adminResponses, setAdminResponses] = useState([]);
 
+  // 🔄 Keep-alive ping every 10 minutes to prevent Render backend cold start
+  useEffect(() => {
+    const ping = () => fetch(`${import.meta.env.VITE_API_URL || 'http://localhost:8082'}/actuator/health`).catch(() => {});
+    ping(); // ping immediately on load
+    const interval = setInterval(ping, 10 * 60 * 1000); // every 10 minutes
+    return () => clearInterval(interval);
+  }, []);
+
   const checkAdminResponses = useCallback(async () => {
     if (isAdmin) return; 
     try {
@@ -525,9 +533,9 @@ const Dashboard = ({ user, loginTimestamp, onLogout }) => {
           {activeTab === 'Transaction History' && (() => {
             const filtered = transactions
               .filter(t => {
-                if (historyFilter === 'Safe') return !t.isFraud && !t.isMediumRisk;
-                if (historyFilter === 'Medium') return t.isMediumRisk;
-                if (historyFilter === 'Fraud') return t.isFraud;
+                if (historyFilter === 'Safe')   return t.riskLevel === 'SAFE'   || (!t.isFraud && !t.isMediumRisk);
+                if (historyFilter === 'Medium') return t.riskLevel === 'MEDIUM' || t.isMediumRisk;
+                if (historyFilter === 'Fraud')  return t.riskLevel === 'HIGH'   || t.isFraud;
                 return true;
               })
               .filter(t => {

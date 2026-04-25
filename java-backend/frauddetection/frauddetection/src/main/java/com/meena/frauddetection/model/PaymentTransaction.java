@@ -1,6 +1,7 @@
 package com.meena.frauddetection.model;
 
 import jakarta.persistence.*;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 @Entity
 @Table(name = "payment_transaction")
@@ -28,7 +29,9 @@ public class PaymentTransaction {
     private String senderEmail;
 
     private String riskLevel;
+    @JsonProperty("isFraud")
     private boolean isFraud;
+    @JsonProperty("isMediumRisk")
     private boolean isMediumRisk;
     private double fraudScore;
     private String status;
