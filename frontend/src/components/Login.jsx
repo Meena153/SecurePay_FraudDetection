@@ -8,6 +8,7 @@ const Login = ({ onSuccess, onToggle }) => {
   const [error, setError] = useState('');
   const [failedAttempts, setFailedAttempts] = useState(0);
   const [showPassword, setShowPassword] = useState(false);
+  const [isWakingUp, setIsWakingUp] = useState(false);
 
   // Access Request State
   const [showContactModal, setShowContactModal] = useState(false);
@@ -24,9 +25,14 @@ const Login = ({ onSuccess, onToggle }) => {
     
     setError('');
     setLoading(true);
+    setIsWakingUp(false);
+
+    // If request takes longer than 4s, assume cold start
+    const wakeUpTimer = setTimeout(() => setIsWakingUp(true), 4000);
 
     try {
       const response = await authAPI.login(formData);
+      clearTimeout(wakeUpTimer);
       setFailedAttempts(0); // reset on success
       localStorage.setItem('token', response.data.token);
       onSuccess(response.data.user);
@@ -38,11 +44,12 @@ const Login = ({ onSuccess, onToggle }) => {
         setError("User is blocked due to 3 failed login attempts.");
         alert("User is blocked");
       } else {
-        setError("Please fill correct details");
-        alert("Please fill correct details");
+        setError("Invalid credentials. Please ensure your username and password are correct.");
       }
     } finally {
+      clearTimeout(wakeUpTimer);
       setLoading(false);
+      setIsWakingUp(false);
     }
   };
 
@@ -130,8 +137,22 @@ const Login = ({ onSuccess, onToggle }) => {
             </div>
           </div>
 
-          <button type="submit" disabled={loading} className="btn-primary w-full mt-2">
-            {loading ? 'Signing in...' : 'Sign In'}
+          <button
+            type="submit"
+            disabled={loading}
+            className="w-full relative group overflow-hidden rounded-xl bg-accent hover:bg-accent-light text-accent-foreground font-bold py-3.5 transition-all duration-300 disabled:opacity-70 disabled:cursor-not-allowed transform active:scale-[0.98]"
+          >
+            <div className="absolute inset-0 bg-white/20 translate-y-full group-hover:translate-y-0 transition-transform duration-300 ease-out"></div>
+            <span className="relative flex items-center justify-center gap-2">
+              {loading ? (
+                <>
+                  <div className="w-5 h-5 border-2 border-accent-foreground/30 border-t-accent-foreground rounded-full animate-spin" />
+                  {isWakingUp ? 'Waking up secure server (takes ~60s)...' : 'Signing in...'}
+                </>
+              ) : (
+                'Sign In'
+              )}
+            </span>
           </button>
 
           <div className="text-center mt-6 pt-6 border-t border-border/40 space-y-4">
