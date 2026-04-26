@@ -22,23 +22,27 @@ public class AuthController {
 
     @PostConstruct
     public void init() {
-        // Ensure default Admin user always exists and has the correct password
-        userRepository.findFirstByUsername("Admin").ifPresentOrElse(
-            admin -> {
-                admin.setPassword(passwordEncoder.encode("admin123"));
-                userRepository.save(admin);
-            },
-            () -> {
-                User admin = new User("Admin", passwordEncoder.encode("admin123"), "fraudalerts123@gmail.com", "Admin", "ALL");
-                userRepository.save(admin);
-                System.out.println("✅ Created default Admin account (Admin / admin123)");
-            }
-        );
+        try {
+            // Ensure default Admin user always exists and has the correct password
+            userRepository.findFirstByUsername("Admin").ifPresentOrElse(
+                admin -> {
+                    admin.setPassword(passwordEncoder.encode("admin123"));
+                    userRepository.save(admin);
+                },
+                () -> {
+                    User admin = new User("Admin", passwordEncoder.encode("admin123"), "fraudalerts123@gmail.com", "Admin", "ALL");
+                    userRepository.save(admin);
+                    System.out.println("✅ Created default Admin account (Admin / admin123)");
+                }
+            );
 
-        // Ensure default analyst exists
-        if (!userRepository.existsByUsername("analyst")) {
-            User analyst = new User("analyst", passwordEncoder.encode("analyst123"), "analyst@securepay.com", "Analyst", "READ_ONLY,VIEW_ALERTS");
-            userRepository.save(analyst);
+            // Ensure default analyst exists
+            if (!userRepository.existsByUsername("analyst")) {
+                User analyst = new User("analyst", passwordEncoder.encode("analyst123"), "analyst@securepay.com", "Analyst", "READ_ONLY,VIEW_ALERTS");
+                userRepository.save(analyst);
+            }
+        } catch (Exception e) {
+            System.err.println("Failed to initialize default users (likely already exist with conflicting emails): " + e.getMessage());
         }
     }
 
