@@ -44,7 +44,7 @@ const Login = ({ onSuccess, onToggle }) => {
         setError("User is blocked due to 3 failed login attempts.");
         alert("User is blocked");
       } else {
-        setError("Invalid credentials. Please ensure your username and password are correct.");
+        setError(err.response?.data?.message || "Server error: " + err.message);
       }
     } finally {
       clearTimeout(wakeUpTimer);
