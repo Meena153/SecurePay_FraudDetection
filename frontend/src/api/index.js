@@ -8,7 +8,8 @@ const API = axios.create({
 export const authAPI = {
     login: (data) => API.post("/auth/login", data),
     signup: (data) => API.post("/auth/signup", data),
-    logout: (data) => API.post("/auth/logout", data)
+    logout: (data) => API.post("/auth/logout", data),
+    validate: (data) => API.post("/auth/validate", data)
 };
 
 export const transactionAPI = {

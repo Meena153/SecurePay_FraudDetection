@@ -147,6 +147,17 @@ public class AuthController {
         return response;
     }
 
+    @PostMapping("/validate")
+    public Map<String, Object> validate(@RequestBody Map<String, String> request) {
+        String username = request.get("username");
+        Map<String, Object> response = new HashMap<>();
+        
+        boolean exists = userRepository.findFirstByUsername(username).isPresent();
+        response.put("valid", exists);
+        
+        return response;
+    }
+
     @PostMapping("/logout")
     public Map<String, Object> logout(@RequestBody Map<String, String> request) {
         String username = request.get("username");

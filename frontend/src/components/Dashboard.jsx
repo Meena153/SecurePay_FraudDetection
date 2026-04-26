@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback, useRef } from 'react';
-import { transactionAPI, auditAPI } from '../api';
+import { transactionAPI, auditAPI, authAPI } from '../api';
 import TransactionList from './TransactionList';
 import MetricsCard from './MetricsCard';
 import FraudChart from './FraudChart';
@@ -72,6 +72,26 @@ const Dashboard = ({ user, loginTimestamp, onLogout }) => {
     const interval = setInterval(ping, 10 * 60 * 1000); // every 10 minutes
     return () => clearInterval(interval);
   }, []);
+
+  // 🛡️ SECURITY HEARTBEAT: Ensure user still exists in DB
+  useEffect(() => {
+    if (!user?.username) return;
+
+    const validateSession = async () => {
+      try {
+        const response = await authAPI.validate({ username: user.username });
+        if (!response.data || response.data.valid === false) {
+          console.warn('>>> SECURITY ALERT: Active session detected for deleted operative. Forcing immediate termination.');
+          onLogout(); // Force logout
+        }
+      } catch (err) {
+        console.error('Session validation heartbeat failed:', err);
+      }
+    };
+
+    const interval = setInterval(validateSession, 30000); // Check every 30s
+    return () => clearInterval(interval);
+  }, [user, onLogout]);
 
   const checkAdminResponses = useCallback(async () => {
     if (isAdmin) return; 
