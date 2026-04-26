@@ -90,8 +90,8 @@ public class UserController {
         User user = userRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("User not found"));
         
-        if (user.getRole().equals("Admin") && userRepository.count() <= 1) {
-            throw new RuntimeException("Cannot delete the last administrator");
+        if (user.getRole().equalsIgnoreCase("Admin")) {
+            throw new RuntimeException("Security Protocol Violation: Administrators cannot be purged from the system registry.");
         }
         
         System.out.println(">>> CLASSIFIED DELETION INITIATED FOR OPERATIVE ID: " + id);
