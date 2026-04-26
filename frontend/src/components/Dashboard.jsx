@@ -50,6 +50,7 @@ const Dashboard = ({ user, loginTimestamp, onLogout }) => {
   ];
   const [transactions, setTransactions] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [refreshing, setRefreshing] = useState(false);
   const [historyFilter, setHistoryFilter] = useState('All');
   const [alertsFilter, setAlertsFilter] = useState('All');
   const [historySearch, setHistorySearch] = useState('');
