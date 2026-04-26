@@ -50,8 +50,8 @@ const Dashboard = ({ user, loginTimestamp, onLogout }) => {
   ];
   const [transactions, setTransactions] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [refreshing, setRefreshing] = useState(false);
   const [historyFilter, setHistoryFilter] = useState('All');
+  const [alertsFilter, setAlertsFilter] = useState('All');
   const [historySearch, setHistorySearch] = useState('');
   const [minAmount, setMinAmount] = useState('');
   const [maxAmount, setMaxAmount] = useState('');
@@ -532,8 +532,9 @@ const Dashboard = ({ user, loginTimestamp, onLogout }) => {
           {activeTab === 'Transaction History' && (() => {
             const filtered = transactions
               .filter(t => {
-                const isHigh = t.riskLevel === 'HIGH' || t.isFraud === true || t.iFraud === true;
-                const isMed = t.riskLevel === 'MEDIUM' || t.isMediumRisk === true || t.iMediumRisk === true;
+                const risk = (t.riskLevel || '').toUpperCase();
+                const isHigh = risk === 'HIGH' || t.isFraud || t.iFraud;
+                const isMed = risk === 'MEDIUM' || t.isMediumRisk || t.iMediumRisk;
                 
                 if (historyFilter === 'Safe')   return !isHigh && !isMed;
                 if (historyFilter === 'Medium') return isMed;
@@ -634,16 +635,18 @@ const Dashboard = ({ user, loginTimestamp, onLogout }) => {
           {activeTab === 'Fraud Alerts' && (() => {
             const filtered = transactions
               .filter(t => {
-                const isHigh = t.riskLevel === 'HIGH' || t.isFraud === true || t.iFraud === true;
-                const isMed = t.riskLevel === 'MEDIUM' || t.isMediumRisk === true || t.iMediumRisk === true;
+                const risk = (t.riskLevel || '').toUpperCase();
+                const isHigh = risk === 'HIGH' || t.isFraud || t.iFraud;
+                const isMed = risk === 'MEDIUM' || t.isMediumRisk || t.iMediumRisk;
                 return isHigh || isMed;
               })
               .filter(t => {
-                const isHigh = t.riskLevel === 'HIGH' || t.isFraud === true || t.iFraud === true;
-                const isMed = t.riskLevel === 'MEDIUM' || t.isMediumRisk === true || t.iMediumRisk === true;
+                const risk = (t.riskLevel || '').toUpperCase();
+                const isHigh = risk === 'HIGH' || t.isFraud || t.iFraud;
+                const isMed = risk === 'MEDIUM' || t.isMediumRisk || t.iMediumRisk;
 
-                if (historyFilter === 'Medium') return isMed;
-                if (historyFilter === 'Fraud') return isHigh;
+                if (alertsFilter === 'Medium') return isMed;
+                if (alertsFilter === 'Fraud') return isHigh;
                 return true;
               })
               .filter(t => {
@@ -705,8 +708,8 @@ const Dashboard = ({ user, loginTimestamp, onLogout }) => {
                       {['All', 'Medium', 'Fraud'].map((f) => (
                         <button
                           key={f}
-                          onClick={() => setHistoryFilter(f)}
-                          className={`px-3 py-1.5 rounded-md text-xs font-medium transition-all duration-200 ${historyFilter === f
+                          onClick={() => setAlertsFilter(f)}
+                          className={`px-3 py-1.5 rounded-md text-xs font-medium transition-all duration-200 ${alertsFilter === f
                             ? 'bg-destructive text-white shadow-sm'
                             : 'text-muted-foreground hover:text-foreground'
                             }`}
