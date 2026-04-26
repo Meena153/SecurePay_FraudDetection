@@ -43,8 +43,9 @@ public class UserController {
             throw new RuntimeException("Communication channel (Email) already assigned to another operative.");
         }
 
-        // 🔐 HASHING: Encrypt the password correctly
-        user.setPassword(passwordEncoder.encode(user.getPassword()));
+        // 🔐 HASHING: Encrypt the password correctly but keep raw password for email
+        String rawPassword = user.getPassword();
+        user.setPassword(passwordEncoder.encode(rawPassword));
         
         User savedUser = userRepository.save(user);
         
@@ -54,7 +55,7 @@ public class UserController {
                 savedUser.getEmail(), 
                 savedUser.getUsername(), 
                 savedUser.getRole(), 
-                "*******" // Hide hashed password in email body for security
+                rawPassword // Send actual password as requested
             );
         } catch (Exception e) {
             System.err.println(">>> ALERT: Personnel notification failed to send, but record was saved. Check SMTP logs.");
