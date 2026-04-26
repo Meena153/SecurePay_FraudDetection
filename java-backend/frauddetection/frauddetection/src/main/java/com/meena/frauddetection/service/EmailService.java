@@ -146,7 +146,7 @@ public class EmailService {
                 "    " +
                 "    <h3 style=\"color: #1e293b; font-size: 16px;\">Onboarding Instructions</h3>" +
                 "    <ol style=\"color: #475569; padding-left: 20px; line-height: 1.6;\">" +
-                "      <li style=\"margin-bottom: 8px;\">Log in to the <a href=\"http://localhost:5173\" style=\"color: #2563eb; text-decoration: none; font-weight: 600;\">SecurePay Operations Portal</a>.</li>" +
+                "      <li style=\"margin-bottom: 8px;\">Log in to the <a href=\"https://secure-pay-frontend.onrender.com\" style=\"color: #2563eb; text-decoration: none; font-weight: 600;\">SecurePay Operations Portal</a>.</li>" +
                 "      <li style=\"margin-bottom: 8px;\">Review the live transaction feed and global threat map.</li>" +
                 "    </ol>" +
                 "    " +
