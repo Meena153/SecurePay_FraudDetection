@@ -30,15 +30,17 @@ public class AuthController {
                     userRepository.save(admin);
                 },
                 () -> {
-                    User admin = new User("Admin", passwordEncoder.encode("admin123"), "fraudalerts123@gmail.com", "Admin", "ALL");
+                    String uniqueEmail = "admin.master." + System.currentTimeMillis() + "@securepay.com";
+                    User admin = new User("Admin", passwordEncoder.encode("admin123"), uniqueEmail, "Admin", "ALL");
                     userRepository.save(admin);
-                    System.out.println("✅ Created default Admin account (Admin / admin123)");
+                    System.out.println("✅ Created default Admin account (Admin / admin123) with email " + uniqueEmail);
                 }
             );
 
             // Ensure default analyst exists
             if (!userRepository.existsByUsername("analyst")) {
-                User analyst = new User("analyst", passwordEncoder.encode("analyst123"), "analyst@securepay.com", "Analyst", "READ_ONLY,VIEW_ALERTS");
+                String analystEmail = "analyst." + System.currentTimeMillis() + "@securepay.com";
+                User analyst = new User("analyst", passwordEncoder.encode("analyst123"), analystEmail, "Analyst", "READ_ONLY,VIEW_ALERTS");
                 userRepository.save(analyst);
             }
         } catch (Exception e) {
