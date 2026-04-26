@@ -23,7 +23,7 @@ public class AuthController {
     @PostConstruct
     public void init() {
         // Ensure default Admin user always exists and has the correct password
-        userRepository.findByUsername("Admin").ifPresentOrElse(
+        userRepository.findFirstByUsername("Admin").ifPresentOrElse(
             admin -> {
                 admin.setPassword(passwordEncoder.encode("admin123"));
                 userRepository.save(admin);
@@ -101,7 +101,7 @@ public class AuthController {
             throw new RuntimeException("Username and password are required");
         }
 
-        User user = userRepository.findByUsername(username)
+        User user = userRepository.findFirstByUsername(username)
                 .orElseThrow(() -> new RuntimeException("Invalid username or password"));
         
         // 🔐 SECURE MATCHING: Compare hashed password correctly, but allow plain text fallback for older accounts
@@ -141,7 +141,7 @@ public class AuthController {
         String username = request.get("username");
         Map<String, Object> response = new HashMap<>();
         if (username != null) {
-            userRepository.findByUsername(username).ifPresent(u -> {
+            userRepository.findFirstByUsername(username).ifPresent(u -> {
                 u.setIsActive(false);
                 userRepository.save(u);
             });
