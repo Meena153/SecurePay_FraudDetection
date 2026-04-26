@@ -36,6 +36,11 @@ public class UserController {
             throw new RuntimeException("Signup is currently disabled. Access restricted to authorized personnel only.");
         }
 
+        // 🛑 QUOTA SAFEGUARD: Prevent bot spam from filling the 5GB free tier database
+        if (userRepository.count() >= 1000) {
+            throw new RuntimeException("Database quota reached. Cannot create new accounts.");
+        }
+
         if (userRepository.existsByUsername(user.getUsername())) {
             throw new RuntimeException("Operational ID (Username) already registered in high-security registry.");
         }

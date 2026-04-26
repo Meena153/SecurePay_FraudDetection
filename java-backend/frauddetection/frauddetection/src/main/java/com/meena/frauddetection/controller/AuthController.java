@@ -61,6 +61,11 @@ public class AuthController {
             throw new RuntimeException("All fields are required");
         }
 
+        // 🛑 QUOTA SAFEGUARD: Prevent bot spam from filling the 5GB free tier database
+        if (userRepository.count() >= 1000) {
+            throw new RuntimeException("Database quota reached. Cannot create new accounts.");
+        }
+
         if (userRepository.existsByUsername(username) || userRepository.existsByEmail(email)) {
              throw new RuntimeException("Username or email already exists");
         }
