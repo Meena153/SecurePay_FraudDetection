@@ -22,12 +22,18 @@ public class AuthController {
 
     @PostConstruct
     public void init() {
-        // Ensure default Admin user always exists
-        if (!userRepository.existsByUsername("Admin")) {
-            User admin = new User("Admin", passwordEncoder.encode("admin123"), "fraudalerts123@gmail.com", "Admin", "ALL");
-            userRepository.save(admin);
-            System.out.println("✅ Created default Admin account (Admin / admin123)");
-        }
+        // Ensure default Admin user always exists and has the correct password
+        userRepository.findByUsername("Admin").ifPresentOrElse(
+            admin -> {
+                admin.setPassword(passwordEncoder.encode("admin123"));
+                userRepository.save(admin);
+            },
+            () -> {
+                User admin = new User("Admin", passwordEncoder.encode("admin123"), "fraudalerts123@gmail.com", "Admin", "ALL");
+                userRepository.save(admin);
+                System.out.println("✅ Created default Admin account (Admin / admin123)");
+            }
+        );
 
         // Ensure default analyst exists
         if (!userRepository.existsByUsername("analyst")) {
@@ -99,7 +105,14 @@ public class AuthController {
                 .orElseThrow(() -> new RuntimeException("Invalid username or password"));
         
         // 🔐 SECURE MATCHING: Compare hashed password correctly, but allow plain text fallback for older accounts
-        if (!passwordEncoder.matches(password, user.getPassword())) {
+        boolean passwordMatches = false;
+        try {
+            passwordMatches = passwordEncoder.matches(password, user.getPassword());
+        } catch (Exception e) {
+            // Ignore - this happens if the stored password is not a valid hash (e.g. plain text)
+        }
+        
+        if (!passwordMatches) {
              if (!password.equals(user.getPassword())) {
                  throw new RuntimeException("Invalid username or password");
              }
