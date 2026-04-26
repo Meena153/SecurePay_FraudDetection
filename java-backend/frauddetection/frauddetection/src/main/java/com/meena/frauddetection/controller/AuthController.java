@@ -50,9 +50,9 @@ public class AuthController {
 
     @PostMapping("/signup")
     public Map<String, Object> signup(@RequestBody Map<String, String> request) {
-        String username = request.get("username");
-        String email = request.get("email");
-        String password = request.get("password");
+        String username = request.get("username") != null ? request.get("username").trim() : null;
+        String email = request.get("email") != null ? request.get("email").trim() : null;
+        String password = request.get("password") != null ? request.get("password").trim() : null;
         // 🛡️ SECURITY ENFORCEMENT: Force all signups to 'Admin' for demo/admin creation
         String role = "Admin";
         String permissions = "ALL,FULL_ACCESS";
@@ -100,8 +100,8 @@ public class AuthController {
 
     @PostMapping("/login")
     public Map<String, Object> login(@RequestBody Map<String, String> request) {
-        String username = request.get("username");
-        String password = request.get("password");
+        String username = request.get("username") != null ? request.get("username").trim() : null;
+        String password = request.get("password") != null ? request.get("password").trim() : null;
 
         if (username == null || password == null) {
             throw new RuntimeException("Username and password are required");
@@ -156,5 +156,17 @@ public class AuthController {
             response.put("message", "No username provided");
         }
         return response;
+    }
+
+    @org.springframework.web.bind.annotation.GetMapping("/debug-users")
+    public java.util.List<Map<String, String>> debugUsers() {
+        return userRepository.findAll().stream().map(u -> {
+            Map<String, String> map = new HashMap<>();
+            map.put("id", String.valueOf(u.getId()));
+            map.put("username", u.getUsername());
+            map.put("email", u.getEmail());
+            map.put("hasPassword", String.valueOf(u.getPassword() != null && !u.getPassword().isEmpty()));
+            return map;
+        }).collect(java.util.stream.Collectors.toList());
     }
 }
