@@ -8,7 +8,10 @@ import com.meena.frauddetection.service.TransactionService;
 import com.meena.frauddetection.repository.TransactionRepository;
 import com.meena.frauddetection.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,6 +32,9 @@ public class TransactionController {
 
     @Value("${app.fraud.alert-recipient:fraudalerts123@gmail.com}")
     private String alertRecipient;
+
+    @PersistenceContext
+    private EntityManager entityManager;
 
     private static boolean isEmailAlertEnabled = true;
 
@@ -214,7 +220,10 @@ public class TransactionController {
         return syntheticBatch;
     }
     @DeleteMapping
+    @Transactional
     public void deleteAllTransactions() {
-        transactionRepository.deleteAll();
+        transactionRepository.deleteAllInBatch();
+        // Reset auto-increment sequence to start from 1
+        entityManager.createNativeQuery("TRUNCATE TABLE payment_transaction").executeUpdate();
     }
 }
