@@ -4,7 +4,7 @@ import {
     Play, Square, Zap, Activity, Shield, Eye, EyeOff,
     CheckCircle, XCircle, AlertTriangle, Key, Database, BarChart2, Server
 } from 'lucide-react';
-import { settingsAPI, transactionAPI, auditAPI } from '../api';
+import { settingsAPI } from '../api';
 
 const Settings = ({ user, isRunning, setIsRunning, txSpeed, setTxSpeed }) => {
     const [fraudScenario, setFraudScenario] = useState('basic');
@@ -477,76 +477,6 @@ const Settings = ({ user, isRunning, setIsRunning, txSpeed, setTxSpeed }) => {
                 </div>
             </section>
             
-
-
-            {/* ─── System Maintenance ─── */}
-            {user?.role === 'Admin' && (
-                <section className="animate-in fade-in slide-in-from-bottom-4 duration-700">
-                    <div className="flex items-center gap-2 mb-6">
-                        <Database className="w-6 h-6 text-destructive" />
-                        <h2 className="text-xl font-bold uppercase tracking-tight">System Maintenance</h2>
-                    </div>
-
-                    <div className="glass-card p-8 border-destructive/20 bg-destructive/5 space-y-6">
-                        <div className="flex flex-col md:flex-row items-center justify-between gap-6 p-6 rounded-xl border border-destructive/20 bg-background/40">
-                            <div className="space-y-1">
-                                <p className="text-sm font-bold text-foreground flex items-center gap-2">
-                                    <Activity className="w-4 h-4 text-destructive" />
-                                    Purge Transaction History
-                                </p>
-                                <p className="text-xs text-muted-foreground max-w-md">
-                                    Permanently deletes all synthetic and real-time transaction records from the database. 
-                                    This action is irreversible and will reset all dashboard metrics.
-                                </p>
-                            </div>
-                            <button 
-                                onClick={async () => {
-                                    if(window.confirm('CRITICAL: Purge all transaction data? This cannot be undone.')) {
-                                        try {
-                                            await transactionAPI.clearAll();
-                                            alert('Database Purged: All transaction records have been successfully deleted.');
-                                            window.location.reload(); // Refresh to clear state
-                                        } catch(err) {
-                                            alert('Maintenance Error: Failed to purge database.');
-                                        }
-                                    }
-                                }}
-                                className="w-full md:w-auto px-6 py-2.5 rounded-xl bg-destructive hover:bg-destructive/90 text-white text-xs font-black uppercase tracking-widest transition-all hover:scale-105 active:scale-95 shadow-lg shadow-destructive/20"
-                            >
-                                Purge Database
-                            </button>
-                        </div>
-
-                        <div className="flex flex-col md:flex-row items-center justify-between gap-6 p-6 rounded-xl border border-border/40 bg-background/40">
-                            <div className="space-y-1">
-                                <p className="text-sm font-bold text-foreground flex items-center gap-2">
-                                    <Shield className="w-4 h-4 text-muted-foreground" />
-                                    Clear Security Audit Logs
-                                </p>
-                                <p className="text-xs text-muted-foreground max-w-md">
-                                    Wipes the event trail and security logs. Recommended only for system resets or 
-                                    compliance-mandated data rotation.
-                                </p>
-                            </div>
-                            <button 
-                                onClick={async () => {
-                                    if(window.confirm('Confirm security log rotation? All current audit trails will be lost.')) {
-                                        try {
-                                            await auditAPI.clearLogs();
-                                            alert('Logs Cleared: Security audit trail has been rotated.');
-                                        } catch(err) {
-                                            alert('Maintenance Error: Failed to rotate logs.');
-                                        }
-                                    }
-                                }}
-                                className="w-full md:w-auto px-6 py-2.5 rounded-xl bg-secondary hover:bg-secondary/80 text-foreground text-xs font-black uppercase tracking-widest border border-border/40 transition-all"
-                            >
-                                Rotate Logs
-                            </button>
-                        </div>
-                    </div>
-                </section>
-            )}
 
         </div>
     );
