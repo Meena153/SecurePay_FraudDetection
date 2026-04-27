@@ -347,6 +347,30 @@ const Settings = ({ user, isRunning, setIsRunning, txSpeed, setTxSpeed }) => {
                     />
                     {/* In-App Alerts toggle removed as sound functionality was deleted */}
                 </div>
+
+                {user?.role === 'Admin' && (
+                    <div className="mt-4 p-4 glass-card bg-primary/5 border border-primary/20 flex items-center justify-between">
+                        <div>
+                            <p className="text-xs font-bold uppercase tracking-tight">System Diagnostic</p>
+                            <p className="text-[10px] text-muted-foreground uppercase font-black opacity-60">Verify SMTP Alert Connectivity</p>
+                        </div>
+                        <button 
+                            onClick={async () => {
+                                try {
+                                    const { transactionAPI } = await import('../api');
+                                    await transactionAPI.sendTestEmail();
+                                    alert('✅ Test fraud alert dispatched! Check your inbox (including spam).');
+                                } catch (error) {
+                                    console.error('Test email failed:', error);
+                                    alert('❌ Failed to send test alert. Check server logs.');
+                                }
+                            }}
+                            className="px-4 py-2 bg-primary/20 hover:bg-primary/30 text-primary text-[10px] font-black uppercase tracking-widest rounded-lg border border-primary/30 transition-all"
+                        >
+                            Send Test Alert
+                        </button>
+                    </div>
+                )}
             </section>
 
             {/* ─── Simulation Control ─── */}

@@ -17,7 +17,8 @@ export const transactionAPI = {
     create: (data) => API.post("/transactions", data),
     createBatch: (data) => API.post("/transactions/batch", data),
     generate: (count) => API.post(`/transactions/generate?count=${count}`),
-    clearAll: () => API.delete("/transactions")
+    clearAll: () => API.delete("/transactions"),
+    sendTestEmail: () => API.post("/transactions/test-email")
 };
 
 export const settingsAPI = {

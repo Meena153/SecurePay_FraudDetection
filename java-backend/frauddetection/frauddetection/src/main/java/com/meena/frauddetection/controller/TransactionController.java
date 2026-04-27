@@ -54,6 +54,23 @@ public class TransactionController {
         return isEmailAlertEnabled;
     }
 
+    @PostMapping("/test-email")
+    public Map<String, String> sendTestEmail() {
+        PaymentTransaction testTx = new PaymentTransaction();
+        testTx.setTransactionId("TEST-SMTP-VERIFY-" + System.currentTimeMillis());
+        testTx.setAmount(99999.0);
+        testTx.setRiskLevel("HIGH");
+        testTx.setSenderLocation("Security Test Protocol");
+        testTx.setSenderDevice("Admin Console");
+        testTx.setSenderEmail("test@securepay.com");
+        
+        checkAndSendAlert(testTx);
+        
+        Map<String, String> response = new HashMap<>();
+        response.put("message", "Test alert dispatched to all admins.");
+        return response;
+    }
+
     @PostMapping
     public PaymentTransaction createTransaction(@RequestBody PaymentTransaction transaction) {
         PaymentTransaction processedTx = transactionService.processTransaction(transaction);
