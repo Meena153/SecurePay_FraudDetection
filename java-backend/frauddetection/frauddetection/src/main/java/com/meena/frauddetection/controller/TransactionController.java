@@ -91,11 +91,10 @@ public class TransactionController {
                 recipients.add(tx.getSenderEmail());
             }
 
-            // Add ALL active registered admins
+            // Add ALL registered admins
             List<String> adminEmails = new ArrayList<>(
                 userRepository.findAllByRole("Admin")
                     .stream()
-                    .filter(User::getIsActive) // ONLY notify currently logged in admins
                     .map(User::getEmail)
                     .collect(Collectors.toList())
             );
@@ -200,6 +199,7 @@ public class TransactionController {
             mockTx.setSenderId("USR-" + (1000 + random.nextInt(9000)));
             mockTx.setSenderAccount("ACC" + (1000000000L + (long)(random.nextDouble() * 9000000000L)));
             mockTx.setSenderMobile("9" + (100000000L + (long)(random.nextDouble() * 899999999L)));
+            mockTx.setSenderEmail("customer" + (100 + random.nextInt(900)) + "@example.com");
             
             mockTx.setReceiverId("USR-" + (1000 + random.nextInt(9000)));
             mockTx.setReceiverAccount("ACC" + (1000000000L + (long)(random.nextDouble() * 9000000000L)));
