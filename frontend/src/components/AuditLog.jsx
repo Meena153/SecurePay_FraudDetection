@@ -243,40 +243,40 @@ const AuditLog = ({ user }) => {
           </div>
         </div>
 
-        <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
           <button
             onClick={() => fetchLogs(true)}
             disabled={refreshing}
-            className="w-full sm:flex-1 btn-secondary !py-3 !px-5 flex items-center justify-center gap-3 text-xs font-bold transition-all active:scale-95"
+            className="btn-secondary !py-3 !px-4 flex items-center justify-center gap-3 text-[11px] font-black uppercase transition-all active:scale-95"
           >
             <RefreshCw className={`w-4 h-4 shrink-0 ${refreshing ? 'animate-spin' : ''}`} />
             <span>Refresh Trail</span>
           </button>
           
-          <div className="relative w-full sm:flex-1" ref={dropdownRef}>
+          <div className="relative w-full" ref={dropdownRef}>
             <button
               onClick={() => setExportOpen(!exportOpen)}
-              className="w-full btn-secondary !py-3 !px-5 flex items-center justify-center gap-3 text-xs font-bold transition-all active:scale-95"
+              className="w-full btn-secondary !py-3 !px-4 flex items-center justify-center gap-3 text-[11px] font-black uppercase transition-all active:scale-95"
             >
               <Download className="w-4 h-4 shrink-0" />
-              <span>Export Reports</span>
-              <ChevronDown className={`w-3 h-3 ml-auto sm:ml-0 transition-transform ${exportOpen ? 'rotate-180' : ''}`} />
+              <span>Export Report</span>
+              <ChevronDown className={`w-3 h-3 transition-transform ${exportOpen ? 'rotate-180' : ''}`} />
             </button>
             {exportOpen && (
               <div className="absolute left-0 right-0 top-full mt-2 bg-zinc-900 border border-zinc-700/50 rounded-2xl shadow-2xl overflow-hidden z-[100] backdrop-blur-xl animate-in fade-in zoom-in-95 duration-200">
                 <button
                   onClick={exportCSV}
-                  className="w-full text-left px-5 py-3 text-xs hover:bg-zinc-800 font-bold transition-all border-b border-zinc-800/50 text-white/80 hover:text-white flex items-center gap-3"
+                  className="w-full text-left px-5 py-3 text-[10px] hover:bg-zinc-800 font-black uppercase transition-all border-b border-zinc-800/50 text-white/80 hover:text-white flex items-center gap-3"
                 >
                   <span className="w-2 h-2 rounded-full bg-blue-500"></span>
-                  Download CSV
+                  CSV Format
                 </button>
                 <button
                   onClick={exportPDF}
-                  className="w-full text-left px-5 py-3 text-xs hover:bg-zinc-800 font-bold transition-all text-white/80 hover:text-white flex items-center gap-3"
+                  className="w-full text-left px-5 py-3 text-[10px] hover:bg-zinc-800 font-black uppercase transition-all text-white/80 hover:text-white flex items-center gap-3"
                 >
                   <span className="w-2 h-2 rounded-full bg-red-500"></span>
-                  Download PDF
+                  PDF Format
                 </button>
               </div>
             )}
@@ -286,10 +286,10 @@ const AuditLog = ({ user }) => {
             <button
               onClick={handleClear}
               disabled={clearing}
-              className="w-full sm:flex-1 flex items-center justify-center gap-3 px-5 py-3 rounded-xl text-xs font-black uppercase tracking-widest bg-destructive/10 text-destructive border border-destructive/20 hover:bg-destructive/20 transition-all active:scale-95"
+              className="w-full flex items-center justify-center gap-3 px-5 py-3 rounded-xl text-[11px] font-black uppercase tracking-widest bg-destructive/10 text-destructive border border-destructive/20 hover:bg-destructive/20 transition-all active:scale-95 sm:col-span-2 lg:col-span-1"
             >
               <Trash2 className="w-4 h-4 shrink-0" />
-              <span>Purge Records</span>
+              <span>Purge Audit Log</span>
             </button>
           )}
         </div>
@@ -297,7 +297,7 @@ const AuditLog = ({ user }) => {
 
 
       {/* ── Stats strip ── */}
-      <div className="flex flex-wrap gap-3 sm:gap-4">
+      <div className="grid grid-cols-2 xs:grid-cols-3 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3 sm:gap-4">
         {[
           { label: 'Total Events', value: stats.total, color: 'border-border/40 text-foreground' },
           { label: 'Critical', value: stats.critical, color: 'border-red-400/20 text-red-400' },
@@ -305,7 +305,7 @@ const AuditLog = ({ user }) => {
           { label: 'Auth Events', value: stats.auth, color: 'border-blue-400/20 text-blue-400' },
           { label: 'Config', value: stats.settings, color: 'border-yellow-400/20 text-yellow-400' }
         ].map((stat, i) => (
-          <div key={i} className="flex-1 min-w-[120px] xs:min-w-[140px]">
+          <div key={i} className="min-w-0">
              <StatBadge label={stat.label} value={stat.value} color={stat.color} />
           </div>
         ))}
