@@ -230,52 +230,52 @@ const AuditLog = ({ user }) => {
     <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
 
       {/* ── Header ── */}
-      <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-6">
+      <div className="flex flex-col gap-6">
         <div className="flex items-center gap-4">
-          <div className="p-3 rounded-2xl bg-primary/10 border border-primary/20 shadow-inner">
+          <div className="p-3 rounded-2xl bg-primary/10 border border-primary/20 shadow-inner shrink-0">
             <Shield className="w-7 h-7 text-primary" />
           </div>
-          <div>
-            <h2 className="text-2xl font-black uppercase tracking-tighter text-foreground">Audit Log</h2>
-            <p className="text-[10px] text-muted-foreground uppercase font-black tracking-[0.2em] opacity-70">
-              Security Event Trail • Real-time Monitoring
+          <div className="min-w-0">
+            <h2 className="text-xl sm:text-2xl font-black uppercase tracking-tighter text-foreground truncate">Audit Log</h2>
+            <p className="text-[9px] sm:text-[10px] text-muted-foreground uppercase font-black tracking-[0.1em] sm:tracking-[0.2em] opacity-70 truncate">
+              Security Event Trail • Real-time
             </p>
           </div>
         </div>
 
-        <div className="flex items-center gap-2 w-full lg:w-auto overflow-x-auto no-scrollbar pb-1 lg:pb-0">
+        <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
           <button
             onClick={() => fetchLogs(true)}
             disabled={refreshing}
-            className="flex-1 lg:flex-none btn-secondary !py-2.5 !px-5 flex items-center justify-center gap-2 text-xs font-bold whitespace-nowrap"
+            className="flex-1 btn-secondary !py-3 !px-5 flex items-center justify-center gap-2 text-xs font-bold"
           >
             <RefreshCw className={`w-4 h-4 ${refreshing ? 'animate-spin' : ''}`} />
             Refresh Trail
           </button>
           
-          <div className="relative flex-1 lg:flex-none" ref={dropdownRef}>
+          <div className="relative flex-1" ref={dropdownRef}>
             <button
               onClick={() => setExportOpen(!exportOpen)}
-              className="w-full btn-secondary !py-2.5 !px-5 flex items-center justify-center gap-2 text-xs font-bold whitespace-nowrap"
+              className="w-full btn-secondary !py-3 !px-5 flex items-center justify-center gap-2 text-xs font-bold"
             >
               <Download className="w-4 h-4" />
               Export
               <ChevronDown className={`w-3 h-3 ml-1 transition-transform ${exportOpen ? 'rotate-180' : ''}`} />
             </button>
             {exportOpen && (
-              <div className="absolute right-0 top-full mt-2 w-48 bg-zinc-900 border border-zinc-700/50 rounded-2xl shadow-[0_8px_32px_rgba(0,0,0,0.6)] overflow-hidden z-[100] backdrop-blur-xl animate-in fade-in zoom-in-95 duration-200">
+              <div className="absolute right-0 sm:left-0 sm:right-auto top-full mt-2 w-full sm:w-48 bg-zinc-900 border border-zinc-700/50 rounded-2xl shadow-[0_8px_32px_rgba(0,0,0,0.6)] overflow-hidden z-[100] backdrop-blur-xl animate-in fade-in zoom-in-95 duration-200">
                 <button
                   onClick={exportCSV}
                   className="w-full text-left px-5 py-3 text-xs hover:bg-zinc-800 font-bold transition-all border-b border-zinc-800/50 text-white/80 hover:text-white flex items-center gap-3"
                 >
-                  <span className="w-2 h-2 rounded-full bg-blue-500 shadow-[0_0_8px_rgba(59,130,246,0.5)]"></span>
+                  <span className="w-2 h-2 rounded-full bg-blue-500"></span>
                   Download CSV
                 </button>
                 <button
                   onClick={exportPDF}
                   className="w-full text-left px-5 py-3 text-xs hover:bg-zinc-800 font-bold transition-all text-white/80 hover:text-white flex items-center gap-3"
                 >
-                  <span className="w-2 h-2 rounded-full bg-red-500 shadow-[0_0_8px_rgba(239,68,68,0.5)]"></span>
+                  <span className="w-2 h-2 rounded-full bg-red-500"></span>
                   Download PDF
                 </button>
               </div>
@@ -286,7 +286,7 @@ const AuditLog = ({ user }) => {
             <button
               onClick={handleClear}
               disabled={clearing}
-              className="flex-1 lg:flex-none flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl text-xs font-black uppercase tracking-widest bg-destructive/10 text-destructive border border-destructive/20 hover:bg-destructive/20 transition-all hover:scale-[1.02] active:scale-[0.98]"
+              className="flex-1 flex items-center justify-center gap-2 px-5 py-3 rounded-xl text-xs font-black uppercase tracking-widest bg-destructive/10 text-destructive border border-destructive/20 hover:bg-destructive/20 transition-all"
             >
               <Trash2 className="w-4 h-4" />
               Purge
@@ -297,7 +297,7 @@ const AuditLog = ({ user }) => {
 
 
       {/* ── Stats strip ── */}
-      <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
         <StatBadge label="Total Events"  value={stats.total}    color="border-border/40 text-foreground" />
         <StatBadge label="Critical"      value={stats.critical} color="border-red-400/20 text-red-400" />
         <StatBadge label="Warnings"      value={stats.warning}  color="border-yellow-400/20 text-yellow-400" />
