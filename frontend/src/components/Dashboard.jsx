@@ -437,11 +437,16 @@ const Dashboard = ({ user, loginTimestamp, onLogout }) => {
 
                   <div className="relative">
                     <button
-                      onClick={() => window.open("https://mail.google.com/mail/u/0/#inbox", "_blank")}
+                      onClick={() => setActiveTab('Contact Admin')}
                       className="p-2 rounded-xl bg-secondary hover:bg-secondary/80 transition-colors notification-btn"
-                      title="Open Gmail Inbox"
+                      title="View Administrator Responses"
                     >
-                      <Mail className={`w-4 h-4 sm:w-5 sm:h-5 text-muted-foreground ${unreadAlerts > 0 ? 'text-destructive' : ''}`} />
+                      <Mail className={`w-4 h-4 sm:w-5 sm:h-5 text-muted-foreground ${adminResponses.length > 0 ? 'text-primary' : ''}`} />
+                      {adminResponses.length > 0 && (
+                        <span className="notification-badge bg-primary">
+                          {adminResponses.length > 9 ? '9+' : adminResponses.length}
+                        </span>
+                      )}
                     </button>
                   </div>
                   <div className="text-right hidden lg:block">
