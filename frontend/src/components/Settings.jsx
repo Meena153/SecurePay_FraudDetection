@@ -348,35 +348,7 @@ const Settings = ({ user, isRunning, setIsRunning, txSpeed, setTxSpeed }) => {
                     {/* In-App Alerts toggle removed as sound functionality was deleted */}
                 </div>
 
-                {user?.role === 'Admin' && (
-                    <div className="mt-4 p-4 glass-card bg-primary/5 border border-primary/20 flex items-center justify-between">
-                        <div>
-                            <p className="text-xs font-bold uppercase tracking-tight">System Diagnostic</p>
-                            <p className="text-[10px] text-muted-foreground uppercase font-black opacity-60">Verify SMTP Alert Connectivity</p>
-                        </div>
-                        <button 
-                            onClick={async () => {
-                                try {
-                                    const { transactionAPI } = await import('../api');
-                                    const response = await transactionAPI.sendTestEmail();
-                                    const data = response.data;
-                                    
-                                    if (data.status === 'SUCCESS') {
-                                        alert(`✅ SUCCESS!\nDispatched to: ${data.recipients.join(', ')}`);
-                                    } else {
-                                        alert(`❌ FAILED\nReason: ${data.error || 'Unknown error'}\nAdmins found: ${data.admins_found || 0}`);
-                                    }
-                                } catch (error) {
-                                    console.error('Test email failed:', error);
-                                    alert('❌ CONNECTION ERROR\nCould not reach the server. Ensure the backend is live.');
-                                }
-                            }}
-                            className="px-4 py-2 bg-primary/20 hover:bg-primary/30 text-primary text-[10px] font-black uppercase tracking-widest rounded-lg border border-primary/30 transition-all"
-                        >
-                            Send Test Alert
-                        </button>
-                    </div>
-                )}
+                </div>
             </section>
 
             {/* ─── Simulation Control ─── */}

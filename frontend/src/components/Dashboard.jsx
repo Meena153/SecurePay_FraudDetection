@@ -45,7 +45,6 @@ const Dashboard = ({ user, loginTimestamp, onLogout }) => {
     ...(isAdmin ? [{ name: 'User Management', icon: Users }] : []),
     { name: 'Audit Log', icon: ClipboardList },
     ...(!isAdmin ? [{ name: 'Contact Admin', icon: MessageSquare }] : []),
-    ...(isAdmin ? [{ name: 'System Status', icon: Server }] : []),
     { name: 'Settings', icon: SettingsIcon },
   ];
   const [transactions, setTransactions] = useState([]);
