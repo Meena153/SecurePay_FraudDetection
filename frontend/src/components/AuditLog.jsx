@@ -247,23 +247,23 @@ const AuditLog = ({ user }) => {
           <button
             onClick={() => fetchLogs(true)}
             disabled={refreshing}
-            className="flex-1 btn-secondary !py-3 !px-5 flex items-center justify-center gap-2 text-xs font-bold"
+            className="w-full sm:flex-1 btn-secondary !py-3 !px-5 flex items-center justify-center gap-3 text-xs font-bold transition-all active:scale-95"
           >
-            <RefreshCw className={`w-4 h-4 ${refreshing ? 'animate-spin' : ''}`} />
-            Refresh Trail
+            <RefreshCw className={`w-4 h-4 shrink-0 ${refreshing ? 'animate-spin' : ''}`} />
+            <span>Refresh Trail</span>
           </button>
           
-          <div className="relative flex-1" ref={dropdownRef}>
+          <div className="relative w-full sm:flex-1" ref={dropdownRef}>
             <button
               onClick={() => setExportOpen(!exportOpen)}
-              className="w-full btn-secondary !py-3 !px-5 flex items-center justify-center gap-2 text-xs font-bold"
+              className="w-full btn-secondary !py-3 !px-5 flex items-center justify-center gap-3 text-xs font-bold transition-all active:scale-95"
             >
-              <Download className="w-4 h-4" />
-              Export
-              <ChevronDown className={`w-3 h-3 ml-1 transition-transform ${exportOpen ? 'rotate-180' : ''}`} />
+              <Download className="w-4 h-4 shrink-0" />
+              <span>Export Reports</span>
+              <ChevronDown className={`w-3 h-3 ml-auto sm:ml-0 transition-transform ${exportOpen ? 'rotate-180' : ''}`} />
             </button>
             {exportOpen && (
-              <div className="absolute right-0 sm:left-0 sm:right-auto top-full mt-2 w-full sm:w-48 bg-zinc-900 border border-zinc-700/50 rounded-2xl shadow-[0_8px_32px_rgba(0,0,0,0.6)] overflow-hidden z-[100] backdrop-blur-xl animate-in fade-in zoom-in-95 duration-200">
+              <div className="absolute left-0 right-0 top-full mt-2 bg-zinc-900 border border-zinc-700/50 rounded-2xl shadow-2xl overflow-hidden z-[100] backdrop-blur-xl animate-in fade-in zoom-in-95 duration-200">
                 <button
                   onClick={exportCSV}
                   className="w-full text-left px-5 py-3 text-xs hover:bg-zinc-800 font-bold transition-all border-b border-zinc-800/50 text-white/80 hover:text-white flex items-center gap-3"
@@ -286,10 +286,10 @@ const AuditLog = ({ user }) => {
             <button
               onClick={handleClear}
               disabled={clearing}
-              className="flex-1 flex items-center justify-center gap-2 px-5 py-3 rounded-xl text-xs font-black uppercase tracking-widest bg-destructive/10 text-destructive border border-destructive/20 hover:bg-destructive/20 transition-all"
+              className="w-full sm:flex-1 flex items-center justify-center gap-3 px-5 py-3 rounded-xl text-xs font-black uppercase tracking-widest bg-destructive/10 text-destructive border border-destructive/20 hover:bg-destructive/20 transition-all active:scale-95"
             >
-              <Trash2 className="w-4 h-4" />
-              Purge
+              <Trash2 className="w-4 h-4 shrink-0" />
+              <span>Purge Records</span>
             </button>
           )}
         </div>
@@ -297,40 +297,36 @@ const AuditLog = ({ user }) => {
 
 
       {/* ── Stats strip ── */}
-      <div className="flex flex-wrap gap-4">
-        <div className="flex-1 min-w-[140px]">
-          <StatBadge label="Total Events"  value={stats.total}    color="border-border/40 text-foreground" />
-        </div>
-        <div className="flex-1 min-w-[140px]">
-          <StatBadge label="Critical"      value={stats.critical} color="border-red-400/20 text-red-400" />
-        </div>
-        <div className="flex-1 min-w-[140px]">
-          <StatBadge label="Warnings"      value={stats.warning}  color="border-yellow-400/20 text-yellow-400" />
-        </div>
-        <div className="flex-1 min-w-[140px]">
-          <StatBadge label="Auth Events"   value={stats.auth}     color="border-blue-400/20 text-blue-400" />
-        </div>
-        <div className="flex-1 min-w-[140px]">
-          <StatBadge label="Config"        value={stats.settings} color="border-yellow-400/20 text-yellow-400" />
-        </div>
+      <div className="flex flex-wrap gap-3 sm:gap-4">
+        {[
+          { label: 'Total Events', value: stats.total, color: 'border-border/40 text-foreground' },
+          { label: 'Critical', value: stats.critical, color: 'border-red-400/20 text-red-400' },
+          { label: 'Warnings', value: stats.warning, color: 'border-yellow-400/20 text-yellow-400' },
+          { label: 'Auth Events', value: stats.auth, color: 'border-blue-400/20 text-blue-400' },
+          { label: 'Config', value: stats.settings, color: 'border-yellow-400/20 text-yellow-400' }
+        ].map((stat, i) => (
+          <div key={i} className="flex-1 min-w-[120px] xs:min-w-[140px]">
+             <StatBadge label={stat.label} value={stat.value} color={stat.color} />
+          </div>
+        ))}
       </div>
 
 
       {/* ── Filters ── */}
-      <div className="glass-card p-4 sm:p-5 space-y-5 lg:space-y-0 lg:flex lg:items-center lg:gap-4 border-primary/10">
+      <div className="glass-card p-4 sm:p-5 space-y-5 lg:space-y-0 lg:flex lg:items-center lg:gap-4 border-primary/10 overflow-hidden">
         {/* Search */}
-        <div className="relative flex-1">
+        <div className="relative flex-1 w-full">
           <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground opacity-50" />
           <input
             type="text"
-            placeholder="Search action, user, or details…"
+            placeholder="Search logs..."
             value={search}
             onChange={e => setSearch(e.target.value)}
             className="input-field !pl-11 !py-3 text-sm w-full bg-background/30 border-white/5 focus:border-primary/30 transition-all"
           />
         </div>
 
-        <div className="flex items-center gap-2 overflow-x-auto no-scrollbar pb-1 lg:pb-0 pt-1 lg:pt-0">
+        <div className="flex items-center gap-2 overflow-x-auto no-scrollbar pb-1 lg:pb-0 pt-1 lg:pt-0 w-full lg:w-auto">
           <div className="p-2 rounded-lg bg-secondary/50 border border-white/5 shrink-0">
             <Filter className="w-3.5 h-3.5 text-primary opacity-70" />
           </div>
