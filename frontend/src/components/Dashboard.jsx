@@ -437,16 +437,11 @@ const Dashboard = ({ user, loginTimestamp, onLogout }) => {
 
                   <div className="relative">
                     <button
-                      onClick={() => setActiveTab('Fraud Alerts')}
+                      onClick={() => window.open("https://mail.google.com/mail/u/0/#inbox", "_blank")}
                       className="p-2 rounded-xl bg-secondary hover:bg-secondary/80 transition-colors notification-btn"
-                      title="View Fraud Alerts"
+                      title="Open Gmail Inbox"
                     >
-                      <Mail className={`w-4 h-4 sm:w-5 sm:h-5 text-muted-foreground ${unreadAlerts > 0 ? 'text-destructive' : ''}`} />
-                      {unreadAlerts > 0 && (
-                        <span className="notification-badge bg-destructive text-white">
-                          {unreadAlerts > 9 ? '9+' : unreadAlerts}
-                        </span>
-                      )}
+                      <Mail className="w-4 h-4 sm:w-5 sm:h-5 text-muted-foreground" />
                     </button>
                   </div>
                   <div className="text-right hidden lg:block">
