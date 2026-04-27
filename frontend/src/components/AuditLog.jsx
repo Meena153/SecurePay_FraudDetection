@@ -297,7 +297,7 @@ const AuditLog = ({ user }) => {
 
 
       {/* ── Stats strip ── */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
+      <div className="grid grid-cols-1 xs:grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
         <StatBadge label="Total Events"  value={stats.total}    color="border-border/40 text-foreground" />
         <StatBadge label="Critical"      value={stats.critical} color="border-red-400/20 text-red-400" />
         <StatBadge label="Warnings"      value={stats.warning}  color="border-yellow-400/20 text-yellow-400" />

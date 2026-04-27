@@ -32,7 +32,14 @@ const fireAudit = (user, action, category = 'NAVIGATION', severity = 'INFO', det
 };
 
 const Dashboard = ({ user, loginTimestamp, onLogout }) => {
-  const [activeTab, setActiveTab] = useState('Dashboard');
+  const [activeTab, setActiveTab] = useState(() => {
+    return localStorage.getItem('activeTab') || 'Dashboard';
+  });
+
+  // Persist tab selection
+  useEffect(() => {
+    localStorage.setItem('activeTab', activeTab);
+  }, [activeTab]);
 
   const isAdmin = user?.role === 'Admin';
 
