@@ -358,11 +358,17 @@ const Settings = ({ user, isRunning, setIsRunning, txSpeed, setTxSpeed }) => {
                             onClick={async () => {
                                 try {
                                     const { transactionAPI } = await import('../api');
-                                    await transactionAPI.sendTestEmail();
-                                    alert('✅ Test fraud alert dispatched! Check your inbox (including spam).');
+                                    const response = await transactionAPI.sendTestEmail();
+                                    const data = response.data;
+                                    
+                                    if (data.status === 'SUCCESS') {
+                                        alert(`✅ SUCCESS!\nDispatched to: ${data.recipients.join(', ')}`);
+                                    } else {
+                                        alert(`❌ FAILED\nReason: ${data.error || 'Unknown error'}\nAdmins found: ${data.admins_found || 0}`);
+                                    }
                                 } catch (error) {
                                     console.error('Test email failed:', error);
-                                    alert('❌ Failed to send test alert. Check server logs.');
+                                    alert('❌ CONNECTION ERROR\nCould not reach the server. Ensure the backend is live.');
                                 }
                             }}
                             className="px-4 py-2 bg-primary/20 hover:bg-primary/30 text-primary text-[10px] font-black uppercase tracking-widest rounded-lg border border-primary/30 transition-all"

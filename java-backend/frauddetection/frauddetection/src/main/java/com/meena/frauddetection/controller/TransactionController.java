@@ -55,19 +55,39 @@ public class TransactionController {
     }
 
     @PostMapping("/test-email")
-    public Map<String, String> sendTestEmail() {
-        PaymentTransaction testTx = new PaymentTransaction();
-        testTx.setTransactionId("TEST-SMTP-VERIFY-" + System.currentTimeMillis());
-        testTx.setAmount(99999.0);
-        testTx.setRiskLevel("HIGH");
-        testTx.setSenderLocation("Security Test Protocol");
-        testTx.setSenderDevice("Admin Console");
-        testTx.setSenderEmail("test@securepay.com");
-        
-        checkAndSendAlert(testTx);
-        
-        Map<String, String> response = new HashMap<>();
-        response.put("message", "Test alert dispatched to all admins.");
+    public Map<String, Object> sendTestEmail() {
+        Map<String, Object> response = new HashMap<>();
+        try {
+            List<String> adminEmails = userRepository.findAllByRole("Admin")
+                    .stream()
+                    .map(User::getEmail)
+                    .collect(Collectors.toList());
+            
+            response.put("admins_found", adminEmails.size());
+            response.put("recipients", adminEmails);
+
+            if (adminEmails.isEmpty()) {
+                response.put("status", "ERROR");
+                response.put("error", "No users with role 'Admin' found in database.");
+                return response;
+            }
+
+            PaymentTransaction testTx = new PaymentTransaction();
+            testTx.setTransactionId("TEST-" + System.currentTimeMillis());
+            testTx.setAmount(999.0);
+            testTx.setRiskLevel("HIGH");
+            testTx.setSenderEmail("system-test@securepay.com");
+
+            for (String email : adminEmails) {
+                emailService.sendFraudAlert(email, testTx.getTransactionId(), testTx.getAmount(), "HIGH");
+            }
+
+            response.put("status", "SUCCESS");
+            response.put("message", "Test alert dispatched to " + adminEmails.size() + " admins.");
+        } catch (Exception e) {
+            response.put("status", "ERROR");
+            response.put("error", e.getMessage());
+        }
         return response;
     }
 
