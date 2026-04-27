@@ -6,14 +6,27 @@ import SplashScreen from "./components/SplashScreen";
 import { authAPI } from "./api";
 
 function App() {
-  const [user, setUser] = useState(null);
-  const [loginTimestamp, setLoginTimestamp] = useState(null);
+  // Load user session from localStorage on startup
+  const [user, setUser] = useState(() => {
+    const savedUser = localStorage.getItem("user");
+    return savedUser ? JSON.parse(savedUser) : null;
+  });
+  
+  const [loginTimestamp, setLoginTimestamp] = useState(() => {
+    return localStorage.getItem("loginTimestamp") || null;
+  });
+
   const [showSplash, setShowSplash] = useState(true);
   const [isSignup, setIsSignup] = useState(false);
 
   const handleLogin = (userData) => {
     setUser(userData);
-    setLoginTimestamp(Date.now());
+    const timestamp = Date.now();
+    setLoginTimestamp(timestamp);
+    
+    // Persist to storage
+    localStorage.setItem("user", JSON.stringify(userData));
+    localStorage.setItem("loginTimestamp", timestamp.toString());
   };
 
   const handleLogout = async () => {
@@ -25,26 +38,11 @@ function App() {
         }
     }
     localStorage.removeItem("token");
+    localStorage.removeItem("user");
+    localStorage.removeItem("loginTimestamp");
     setUser(null);
     setLoginTimestamp(null);
   };
-
-  // Handle browser close / refresh to log user out
-  useEffect(() => {
-      const handleUnload = () => {
-          if (user && user.username) {
-              const url = `${import.meta.env.VITE_API_URL || 'http://localhost:8082'}/api/auth/logout`;
-              // sendBeacon ensures the request goes out even as the page unloads
-              const blob = new Blob([JSON.stringify({ username: user.username })], { type: 'application/json' });
-              navigator.sendBeacon(url, blob);
-          }
-      };
-
-      window.addEventListener('beforeunload', handleUnload);
-      return () => {
-          window.removeEventListener('beforeunload', handleUnload);
-      };
-  }, [user]);
 
   if (showSplash) {
     return <SplashScreen onComplete={() => setShowSplash(false)} />;
