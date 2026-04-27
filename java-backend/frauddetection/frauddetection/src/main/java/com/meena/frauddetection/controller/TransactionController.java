@@ -133,7 +133,7 @@ public class TransactionController {
 
     @GetMapping
     public List<PaymentTransaction> getAllTransactions() {
-        return transactionRepository.findTop100ByOrderByIdDesc();
+        return transactionRepository.findAll();
     }
 
     @PostMapping("/generate")
