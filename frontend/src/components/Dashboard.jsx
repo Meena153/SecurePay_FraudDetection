@@ -477,7 +477,7 @@ const Dashboard = ({ user, loginTimestamp, onLogout }) => {
 
 
         {/* Main */}
-        <main className="flex-1 w-full max-w-[1600px] mx-auto px-4 py-8 flex flex-col relative">
+        <main className="flex-1 w-full max-w-[1600px] mx-auto px-3 sm:px-6 py-6 sm:py-8 flex flex-col relative overflow-x-hidden">
 
           {/* Admin Response Notifications for Analysts */}
           {!isAdmin && adminResponses.length > 0 && (

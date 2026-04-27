@@ -297,17 +297,27 @@ const AuditLog = ({ user }) => {
 
 
       {/* ── Stats strip ── */}
-      <div className="grid grid-cols-1 xs:grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
-        <StatBadge label="Total Events"  value={stats.total}    color="border-border/40 text-foreground" />
-        <StatBadge label="Critical"      value={stats.critical} color="border-red-400/20 text-red-400" />
-        <StatBadge label="Warnings"      value={stats.warning}  color="border-yellow-400/20 text-yellow-400" />
-        <StatBadge label="Auth Events"   value={stats.auth}     color="border-blue-400/20 text-blue-400" />
-        <StatBadge label="Config"        value={stats.settings} color="border-yellow-400/20 text-yellow-400" />
+      <div className="flex flex-wrap gap-4">
+        <div className="flex-1 min-w-[140px]">
+          <StatBadge label="Total Events"  value={stats.total}    color="border-border/40 text-foreground" />
+        </div>
+        <div className="flex-1 min-w-[140px]">
+          <StatBadge label="Critical"      value={stats.critical} color="border-red-400/20 text-red-400" />
+        </div>
+        <div className="flex-1 min-w-[140px]">
+          <StatBadge label="Warnings"      value={stats.warning}  color="border-yellow-400/20 text-yellow-400" />
+        </div>
+        <div className="flex-1 min-w-[140px]">
+          <StatBadge label="Auth Events"   value={stats.auth}     color="border-blue-400/20 text-blue-400" />
+        </div>
+        <div className="flex-1 min-w-[140px]">
+          <StatBadge label="Config"        value={stats.settings} color="border-yellow-400/20 text-yellow-400" />
+        </div>
       </div>
 
 
       {/* ── Filters ── */}
-      <div className="glass-card p-5 space-y-4 lg:space-y-0 lg:flex lg:items-center lg:gap-4 border-primary/10">
+      <div className="glass-card p-4 sm:p-5 space-y-5 lg:space-y-0 lg:flex lg:items-center lg:gap-4 border-primary/10">
         {/* Search */}
         <div className="relative flex-1">
           <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground opacity-50" />
@@ -320,21 +330,25 @@ const AuditLog = ({ user }) => {
           />
         </div>
 
-        <div className="flex items-center gap-2 overflow-x-auto no-scrollbar pb-2 lg:pb-0 border-t lg:border-t-0 border-white/5 pt-3 lg:pt-0">
-          <Filter className="w-3.5 h-3.5 text-muted-foreground shrink-0 opacity-40" />
-          {CATEGORIES.map(c => (
-            <button
-              key={c}
-              onClick={() => setCatFilter(c)}
-              className={`px-3.5 py-1.5 rounded-full text-[9px] font-black uppercase tracking-[0.1em] transition-all whitespace-nowrap border ${
-                catFilter === c
-                  ? 'bg-primary text-primary-foreground border-primary shadow-[0_0_15px_rgba(var(--color-primary-rgb),0.3)]'
-                  : 'text-muted-foreground hover:text-foreground bg-secondary/20 border-white/5'
-              }`}
-            >
-              {c === 'ALL' ? 'All' : categoryMeta[c]?.label || c}
-            </button>
-          ))}
+        <div className="flex items-center gap-2 overflow-x-auto no-scrollbar pb-1 lg:pb-0 pt-1 lg:pt-0">
+          <div className="p-2 rounded-lg bg-secondary/50 border border-white/5 shrink-0">
+            <Filter className="w-3.5 h-3.5 text-primary opacity-70" />
+          </div>
+          <div className="flex items-center gap-2">
+            {CATEGORIES.map(c => (
+              <button
+                key={c}
+                onClick={() => setCatFilter(c)}
+                className={`px-4 py-2 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all whitespace-nowrap border ${
+                  catFilter === c
+                    ? 'bg-primary text-primary-foreground border-primary shadow-lg shadow-primary/20'
+                    : 'text-muted-foreground hover:text-foreground bg-secondary/20 border-white/5'
+                }`}
+              >
+                {c === 'ALL' ? 'All' : categoryMeta[c]?.label || c}
+              </button>
+            ))}
+          </div>
         </div>
       </div>
 
