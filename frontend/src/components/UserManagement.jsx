@@ -534,7 +534,7 @@ const UserManagement = ({ currentUser }) => {
                      disabled={currentUser?.username === u.username}
                      className="flex-1 py-2 bg-destructive/10 text-destructive text-[9px] font-black uppercase rounded-lg disabled:opacity-30"
                    >
-                     Revoke
+                     Delete
                    </button>
                 </div>
               </div>
@@ -596,7 +596,7 @@ const UserManagement = ({ currentUser }) => {
                           onClick={(e) => { e.stopPropagation(); handleDeleteClick(u); }}
                           disabled={currentUser?.username === u.username}
                           className="p-1.5 hover:bg-destructive/10 rounded-lg text-muted-foreground hover:text-destructive transition-colors disabled:opacity-30 disabled:cursor-not-allowed group/trash"
-                          title="Cancel Global Access"
+                          title="Delete Personnel Record"
                         >
                           <Trash2 className="w-4 h-4 pointer-events-none" />
                         </button>
@@ -728,7 +728,7 @@ const UserManagement = ({ currentUser }) => {
               <div className="w-16 h-16 bg-destructive/10 rounded-2xl flex items-center justify-center mx-auto mb-6 border border-destructive/20 animate-pulse">
                 <Trash2 className="w-8 h-8 text-destructive" />
               </div>
-              <h3 className="text-xl font-black uppercase tracking-tight mb-2">Cancel Global Access?</h3>
+              <h3 className="text-xl font-black uppercase tracking-tight mb-2">Delete Personnel?</h3>
               <p className="text-sm text-muted-foreground leading-relaxed">
                 You are about to permanently delete <span className="text-foreground font-bold">@{userToDelete?.username}</span> from the secure database. This action is irreversible.
               </p>
