@@ -36,9 +36,9 @@ const categoryIcon = {
 
 /* ─── sub-components ─────────────────────────────────────── */
 const StatBadge = ({ label, value, color }) => (
-  <div className={`flex flex-col items-center px-5 py-3 rounded-xl border ${color} bg-opacity-10`}>
-    <span className="text-2xl font-black">{value}</span>
-    <span className="text-[9px] uppercase font-black text-muted-foreground tracking-widest mt-0.5">{label}</span>
+  <div className={`flex flex-col items-center px-2 py-2.5 rounded-xl border ${color} bg-opacity-10 min-w-0 w-full`}>
+    <span className="text-lg sm:text-2xl font-black truncate w-full text-center">{value}</span>
+    <span className="text-[8px] sm:text-[9px] uppercase font-black text-muted-foreground tracking-tighter sm:tracking-widest mt-0.5 truncate w-full text-center">{label}</span>
   </div>
 );
 
@@ -51,53 +51,55 @@ const LogRow = ({ entry }) => {
 
   return (
     <div
-      className={`border-l-2 rounded-r-xl transition-all duration-200 ${cat.border} ${cat.bg} hover:brightness-110 cursor-pointer`}
+      className={`border-l-2 rounded-r-xl transition-all duration-200 ${cat.border} ${cat.bg} hover:brightness-110 cursor-pointer w-full overflow-hidden`}
       onClick={() => setExpanded(p => !p)}
     >
-      <div className="flex items-start gap-3 px-4 py-3">
+      <div className="flex items-start gap-2 sm:gap-3 px-3 sm:px-4 py-3">
         {/* Severity dot */}
         <div className={`mt-0.5 p-1.5 rounded-lg ${sev.bg} shrink-0`}>
           <SevIcon className={`w-3.5 h-3.5 ${sev.color}`} />
         </div>
 
         {/* Main info */}
-        <div className="flex-1 min-w-0">
-          <div className="flex flex-wrap items-center gap-2 mb-0.5">
-            <span className="text-sm font-bold text-foreground">{entry.action}</span>
-            <span className={`text-[9px] px-2 py-0.5 rounded-full font-black uppercase tracking-widest border ${cat.border} ${cat.color} ${cat.bg}`}>
-              {cat.label}
-            </span>
-            <span className={`text-[9px] px-2 py-0.5 rounded-full font-black uppercase tracking-widest ${sev.bg} ${sev.color}`}>
-              {entry.severity}
-            </span>
+        <div className="flex-1 min-w-0 overflow-hidden">
+          <div className="flex flex-wrap items-center gap-1.5 sm:gap-2 mb-1">
+            <span className="text-xs sm:text-sm font-bold text-foreground break-all">{entry.action}</span>
+            <div className="flex flex-wrap gap-1">
+              <span className={`text-[8px] px-1.5 py-0.5 rounded-full font-black uppercase tracking-tighter border ${cat.border} ${cat.color} ${cat.bg}`}>
+                {cat.label}
+              </span>
+              <span className={`text-[8px] px-1.5 py-0.5 rounded-full font-black uppercase tracking-tighter ${sev.bg} ${sev.color}`}>
+                {entry.severity}
+              </span>
+            </div>
           </div>
-          <div className="flex flex-wrap items-center gap-3 text-[10px] text-muted-foreground">
-            <span className="flex items-center gap-1">
-              <User className="w-3 h-3" />
-              <span className="font-semibold">{entry.user}</span>
+          <div className="flex flex-wrap items-center gap-2 sm:gap-3 text-[9px] text-muted-foreground">
+            <span className="flex items-center gap-1 min-w-0">
+              <User className="w-2.5 h-2.5 shrink-0" />
+              <span className="font-semibold truncate">{entry.user}</span>
             </span>
-            <span className={`px-1.5 py-0.5 rounded font-black ${
+            <span className={`px-1 py-0.5 rounded font-black text-[8px] ${
               entry.role === 'Admin'
                 ? 'bg-primary/10 text-primary'
                 : 'bg-accent/10 text-accent'
             }`}>
               {entry.role}
             </span>
-            <span className="flex items-center gap-1">
-              <Clock className="w-3 h-3" />
+            <span className="flex items-center gap-1 shrink-0">
+              <Clock className="w-2.5 h-2.5" />
               {entry.timestamp}
             </span>
           </div>
         </div>
 
         {/* Expand icon */}
-        <ChevronDown className={`w-4 h-4 text-muted-foreground/50 shrink-0 transition-transform mt-1 ${expanded ? 'rotate-180' : ''}`} />
+        <ChevronDown className={`w-3.5 h-3.5 text-muted-foreground/50 shrink-0 transition-transform mt-1 ${expanded ? 'rotate-180' : ''}`} />
       </div>
 
       {/* Expanded detail */}
       {expanded && entry.details && (
-        <div className="px-4 pb-3 pt-1 border-t border-border/20 ml-9">
-          <p className="text-[11px] text-muted-foreground leading-relaxed font-medium">{entry.details}</p>
+        <div className="px-3 sm:px-4 pb-3 pt-1 border-t border-border/20 ml-8 sm:ml-9">
+          <p className="text-[10px] text-muted-foreground leading-relaxed font-medium break-words">{entry.details}</p>
         </div>
       )}
     </div>
@@ -227,40 +229,40 @@ const AuditLog = ({ user }) => {
   const CATEGORIES = ['ALL', 'AUTH', 'DATA_ACCESS', 'NAVIGATION', 'SETTINGS', 'SECURITY', 'GENERAL'];
 
   return (
-    <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
+    <div className="w-full max-w-full overflow-hidden space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
 
       {/* ── Header ── */}
-      <div className="flex flex-col gap-6">
-        <div className="flex items-center gap-4">
-          <div className="p-3 rounded-2xl bg-primary/10 border border-primary/20 shadow-inner shrink-0">
-            <Shield className="w-7 h-7 text-primary" />
+      <div className="flex flex-col gap-6 w-full overflow-hidden">
+        <div className="flex items-center gap-3 sm:gap-4 w-full">
+          <div className="p-2.5 sm:p-3 rounded-2xl bg-primary/10 border border-primary/20 shadow-inner shrink-0">
+            <Shield className="w-6 h-6 sm:w-7 sm:h-7 text-primary" />
           </div>
-          <div className="min-w-0">
-            <h2 className="text-xl sm:text-2xl font-black uppercase tracking-tighter text-foreground truncate">Audit Log</h2>
-            <p className="text-[9px] sm:text-[10px] text-muted-foreground uppercase font-black tracking-[0.1em] sm:tracking-[0.2em] opacity-70 truncate">
+          <div className="min-w-0 flex-1">
+            <h2 className="text-lg sm:text-2xl font-black uppercase tracking-tighter text-foreground truncate">Audit Log</h2>
+            <p className="text-[8px] sm:text-[10px] text-muted-foreground uppercase font-black tracking-[0.1em] sm:tracking-[0.2em] opacity-70 truncate">
               Security Event Trail • Real-time
             </p>
           </div>
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 w-full">
           <button
             onClick={() => fetchLogs(true)}
             disabled={refreshing}
-            className="btn-secondary !py-3 !px-4 flex items-center justify-center gap-3 text-[11px] font-black uppercase transition-all active:scale-95"
+            className="btn-secondary !py-3 !px-4 flex items-center justify-center gap-3 text-[10px] sm:text-[11px] font-black uppercase transition-all active:scale-95 w-full"
           >
-            <RefreshCw className={`w-4 h-4 shrink-0 ${refreshing ? 'animate-spin' : ''}`} />
-            <span>Refresh Trail</span>
+            <RefreshCw className={`w-3.5 h-3.5 sm:w-4 h-4 shrink-0 ${refreshing ? 'animate-spin' : ''}`} />
+            <span className="truncate">Refresh Trail</span>
           </button>
           
           <div className="relative w-full" ref={dropdownRef}>
             <button
               onClick={() => setExportOpen(!exportOpen)}
-              className="w-full btn-secondary !py-3 !px-4 flex items-center justify-center gap-3 text-[11px] font-black uppercase transition-all active:scale-95"
+              className="w-full btn-secondary !py-3 !px-4 flex items-center justify-center gap-3 text-[10px] sm:text-[11px] font-black uppercase transition-all active:scale-95"
             >
-              <Download className="w-4 h-4 shrink-0" />
-              <span>Export Report</span>
-              <ChevronDown className={`w-3 h-3 transition-transform ${exportOpen ? 'rotate-180' : ''}`} />
+              <Download className="w-3.5 h-3.5 sm:w-4 h-4 shrink-0" />
+              <span className="truncate">Export Report</span>
+              <ChevronDown className={`w-3 h-3 transition-transform shrink-0 ${exportOpen ? 'rotate-180' : ''}`} />
             </button>
             {exportOpen && (
               <div className="absolute left-0 right-0 top-full mt-2 bg-zinc-900 border border-zinc-700/50 rounded-2xl shadow-2xl overflow-hidden z-[100] backdrop-blur-xl animate-in fade-in zoom-in-95 duration-200">
@@ -286,10 +288,10 @@ const AuditLog = ({ user }) => {
             <button
               onClick={handleClear}
               disabled={clearing}
-              className="w-full flex items-center justify-center gap-3 px-5 py-3 rounded-xl text-[11px] font-black uppercase tracking-widest bg-destructive/10 text-destructive border border-destructive/20 hover:bg-destructive/20 transition-all active:scale-95 sm:col-span-2 lg:col-span-1"
+              className="w-full flex items-center justify-center gap-3 px-4 py-3 rounded-xl text-[10px] sm:text-[11px] font-black uppercase tracking-widest bg-destructive/10 text-destructive border border-destructive/20 hover:bg-destructive/20 transition-all active:scale-95 sm:col-span-2 lg:col-span-1"
             >
-              <Trash2 className="w-4 h-4 shrink-0" />
-              <span>Purge Audit Log</span>
+              <Trash2 className="w-3.5 h-3.5 sm:w-4 h-4 shrink-0" />
+              <span className="truncate">Purge Audit Log</span>
             </button>
           )}
         </div>
@@ -297,7 +299,7 @@ const AuditLog = ({ user }) => {
 
 
       {/* ── Stats strip ── */}
-      <div className="flex flex-wrap gap-3 sm:gap-4">
+      <div className="grid grid-cols-2 xs:grid-cols-3 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-2 sm:gap-4 w-full">
         {[
           { label: 'Total Events', value: stats.total, color: 'border-border/40 text-foreground' },
           { label: 'Critical', value: stats.critical, color: 'border-red-400/20 text-red-400' },
@@ -305,7 +307,7 @@ const AuditLog = ({ user }) => {
           { label: 'Auth Events', value: stats.auth, color: 'border-blue-400/20 text-blue-400' },
           { label: 'Config', value: stats.settings, color: 'border-yellow-400/20 text-yellow-400' }
         ].map((stat, i) => (
-          <div key={i} className="flex-1 min-w-[calc(50%-12px)] sm:min-w-[140px] md:min-w-[160px]">
+          <div key={i} className="min-w-0">
              <StatBadge label={stat.label} value={stat.value} color={stat.color} />
           </div>
         ))}
@@ -313,29 +315,29 @@ const AuditLog = ({ user }) => {
 
 
       {/* ── Filters ── */}
-      <div className="glass-card p-4 sm:p-5 space-y-5 lg:space-y-0 lg:flex lg:items-center lg:gap-4 border-primary/10 overflow-hidden">
+      <div className="glass-card p-3 sm:p-5 space-y-4 lg:space-y-0 lg:flex lg:items-center lg:gap-4 border-primary/10 w-full overflow-hidden">
         {/* Search */}
-        <div className="relative flex-1 w-full">
-          <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground opacity-50" />
+        <div className="relative flex-1 w-full min-w-0">
+          <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground opacity-50" />
           <input
             type="text"
             placeholder="Search logs..."
             value={search}
             onChange={e => setSearch(e.target.value)}
-            className="input-field !pl-11 !py-3 text-sm w-full bg-background/30 border-white/5 focus:border-primary/30 transition-all"
+            className="input-field !pl-10 !py-2.5 text-xs sm:text-sm w-full bg-background/30 border-white/5 focus:border-primary/30 transition-all"
           />
         </div>
 
         <div className="flex items-center gap-2 overflow-x-auto no-scrollbar pb-1 lg:pb-0 pt-1 lg:pt-0 w-full lg:w-auto">
           <div className="p-2 rounded-lg bg-secondary/50 border border-white/5 shrink-0">
-            <Filter className="w-3.5 h-3.5 text-primary opacity-70" />
+            <Filter className="w-3 h-3 text-primary opacity-70" />
           </div>
           <div className="flex items-center gap-2">
             {CATEGORIES.map(c => (
               <button
                 key={c}
                 onClick={() => setCatFilter(c)}
-                className={`px-4 py-2 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all whitespace-nowrap border ${
+                className={`px-3 py-1.5 rounded-lg text-[9px] font-black uppercase tracking-widest transition-all whitespace-nowrap border ${
                   catFilter === c
                     ? 'bg-primary text-primary-foreground border-primary shadow-lg shadow-primary/20'
                     : 'text-muted-foreground hover:text-foreground bg-secondary/20 border-white/5'
@@ -352,9 +354,9 @@ const AuditLog = ({ user }) => {
 
       {/* ── Access restriction notice for Analysts ── */}
       {!isAdmin && (
-        <div className="flex items-center gap-3 p-3 rounded-xl bg-yellow-400/5 border border-yellow-400/20 text-yellow-400">
+        <div className="flex items-center gap-3 p-3 rounded-xl bg-yellow-400/5 border border-yellow-400/20 text-yellow-400 w-full">
           <Eye className="w-4 h-4 shrink-0" />
-          <p className="text-xs font-bold">
+          <p className="text-[10px] sm:text-xs font-bold leading-tight">
             You are viewing audit logs in <span className="font-black uppercase">read-only</span> mode. Only Admins can clear logs.
           </p>
         </div>
@@ -362,28 +364,30 @@ const AuditLog = ({ user }) => {
 
       {/* ── Log list ── */}
       {loading ? (
-        <div className="glass-card p-12 text-center animate-pulse">
-          <div className="mx-auto w-12 h-12 rounded-full border-4 border-primary border-t-transparent animate-spin mb-4" />
-          <p className="text-muted-foreground font-medium">Loading audit trail…</p>
+        <div className="glass-card p-12 text-center animate-pulse w-full">
+          <div className="mx-auto w-10 h-10 rounded-full border-4 border-primary border-t-transparent animate-spin mb-4" />
+          <p className="text-muted-foreground text-sm font-medium">Loading audit trail…</p>
         </div>
       ) : filtered.length === 0 ? (
-        <div className="glass-card p-12 text-center">
-          <div className="mx-auto w-16 h-16 rounded-2xl bg-secondary/50 flex items-center justify-center mb-4">
-            <Shield className="w-8 h-8 text-muted-foreground" />
+        <div className="glass-card p-10 text-center w-full">
+          <div className="mx-auto w-14 h-14 rounded-2xl bg-secondary/50 flex items-center justify-center mb-4">
+            <Shield className="w-7 h-7 text-muted-foreground" />
           </div>
-          <p className="font-bold text-muted-foreground">No audit events found</p>
-          <p className="text-xs text-muted-foreground/60 mt-1">
+          <p className="font-bold text-muted-foreground text-sm">No audit events found</p>
+          <p className="text-[10px] text-muted-foreground/60 mt-1">
             Events are recorded as you interact with the system.
           </p>
         </div>
       ) : (
-        <div className="space-y-2">
-          <p className="text-[10px] text-muted-foreground font-black uppercase tracking-widest pl-1">
+        <div className="space-y-2 w-full overflow-hidden">
+          <p className="text-[9px] text-muted-foreground font-black uppercase tracking-widest pl-1">
             Showing {filtered.length} of {logs.length} events
           </p>
-          {filtered.map(entry => (
-            <LogRow key={entry.id} entry={entry} />
-          ))}
+          <div className="space-y-2 w-full overflow-hidden">
+            {filtered.map(entry => (
+              <LogRow key={entry.id} entry={entry} />
+            ))}
+          </div>
         </div>
       )}
     </div>

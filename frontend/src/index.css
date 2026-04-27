@@ -91,16 +91,10 @@
     @apply border-border;
   }
 
-  html, body, #root {
+  body {
     @apply bg-background text-foreground;
     font-family: 'Manrope', -apple-system, BlinkMacSystemFont, sans-serif;
     overflow-x: hidden;
-    width: 100vw;
-    position: relative;
-  }
-
-  body {
-    -webkit-overflow-scrolling: touch;
   }
 
   button {
