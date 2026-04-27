@@ -437,14 +437,14 @@ const Dashboard = ({ user, loginTimestamp, onLogout }) => {
 
                   <div className="relative">
                     <button
-                      onClick={() => setActiveTab('Contact Admin')}
+                      onClick={() => setActiveTab('Fraud Alerts')}
                       className="p-2 rounded-xl bg-secondary hover:bg-secondary/80 transition-colors notification-btn"
-                      title="View Administrator Responses"
+                      title="View Fraud Alerts"
                     >
-                      <Mail className={`w-4 h-4 sm:w-5 sm:h-5 text-muted-foreground ${adminResponses.length > 0 ? 'text-primary' : ''}`} />
-                      {adminResponses.length > 0 && (
-                        <span className="notification-badge bg-primary">
-                          {adminResponses.length > 9 ? '9+' : adminResponses.length}
+                      <Mail className={`w-4 h-4 sm:w-5 sm:h-5 text-muted-foreground ${unreadAlerts > 0 ? 'text-destructive' : ''}`} />
+                      {unreadAlerts > 0 && (
+                        <span className="notification-badge bg-destructive text-white">
+                          {unreadAlerts > 9 ? '9+' : unreadAlerts}
                         </span>
                       )}
                     </button>
