@@ -134,7 +134,7 @@ public class TransactionController {
 
     @GetMapping
     public List<PaymentTransaction> getAllTransactions() {
-        return transactionRepository.findTop500ByOrderByIdDesc();
+        return transactionRepository.findAll();
     }
 
     @PostMapping("/generate")
