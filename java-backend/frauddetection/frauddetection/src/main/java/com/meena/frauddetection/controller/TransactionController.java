@@ -97,11 +97,10 @@ public class TransactionController {
                 recipients.add(tx.getSenderEmail());
             }
 
-            // Add ALL active registered admins
+            // Add ALL registered admins
             List<String> adminEmails = new ArrayList<>(
                 userRepository.findAllByRole("Admin")
                     .stream()
-                    .filter(User::getIsActive) // ONLY notify currently logged in admins
                     .map(User::getEmail)
                     .collect(Collectors.toList())
             );
