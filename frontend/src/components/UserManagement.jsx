@@ -272,8 +272,8 @@ const UserManagement = ({ currentUser }) => {
             </p>
           </div>
 
-          {/* Mobile View - Cards */}
-          <div className="grid grid-cols-1 gap-4 sm:hidden p-4">
+          {/* Mobile/Tablet View - Cards (Show on everything below 1024px) */}
+          <div className="grid grid-cols-1 gap-4 lg:hidden p-4 w-full overflow-hidden">
              {requests.length === 0 ? (
                <div className="text-center py-8 text-muted-foreground text-xs uppercase font-black opacity-50 italic">
                  No transmissions detected
@@ -283,17 +283,17 @@ const UserManagement = ({ currentUser }) => {
                  const isSupportTicket = r.message?.startsWith('[SUPPORT TICKET]');
                  const cleanMessage = isSupportTicket ? r.message.replace('[SUPPORT TICKET] ', '') : r.message;
                  return (
-                   <div key={r.id} className={`glass-card p-4 space-y-4 relative border-l-4 ${
+                   <div key={r.id} className={`glass-card p-4 space-y-4 relative border-l-4 w-full overflow-hidden ${
                      r.status === 'PENDING' 
                        ? (isSupportTicket ? 'border-l-primary' : 'border-l-warning') 
                        : 'border-l-transparent'
                    }`}>
-                      <div className="flex justify-between items-start">
-                        <div>
-                           <p className="text-sm font-bold">{r.name}</p>
-                           <p className="text-[10px] text-muted-foreground">{r.email}</p>
+                      <div className="flex justify-between items-start gap-2">
+                        <div className="min-w-0">
+                           <p className="text-sm font-bold truncate">{r.name}</p>
+                           <p className="text-[10px] text-muted-foreground truncate">{r.email}</p>
                         </div>
-                        <span className={`px-2 py-0.5 rounded text-[8px] font-black tracking-widest border ${
+                        <span className={`shrink-0 px-2 py-0.5 rounded text-[8px] font-black tracking-widest border ${
                           r.status === 'PENDING' ? 'text-warning bg-warning/10 border-warning/20' :
                           r.status === 'PROCESSED' ? 'text-green-500 bg-green-500/10 border-green-500/20' :
                           'text-destructive bg-destructive/10 border-destructive/20'
@@ -307,12 +307,12 @@ const UserManagement = ({ currentUser }) => {
                       <div className="flex flex-wrap gap-2 pt-2">
                         {r.status === 'PENDING' && (
                           <>
-                            <button onClick={() => handleApproveRequest(r)} className="flex-1 py-2 bg-primary/10 text-primary text-[9px] font-black uppercase rounded-lg border border-primary/20">Mod</button>
-                            <button onClick={() => handleQuickApprove(r)} className="flex-1 py-2 bg-green-500/10 text-green-500 text-[9px] font-black uppercase rounded-lg border border-green-500/20">Allow</button>
+                            <button onClick={() => handleApproveRequest(r)} className="flex-1 py-2 bg-primary/10 text-primary text-[9px] font-black uppercase rounded-lg border border-primary/20 active:scale-95 transition-transform">Mod</button>
+                            <button onClick={() => handleQuickApprove(r)} className="flex-1 py-2 bg-green-500/10 text-green-500 text-[9px] font-black uppercase rounded-lg border border-green-500/20 active:scale-95 transition-transform">Allow</button>
                           </>
                         )}
-                        <button onClick={() => openRequestDetail({...r, cleanMessage})} className="flex-1 py-2 bg-secondary text-muted-foreground text-[9px] font-black uppercase rounded-lg">Details</button>
-                        <button onClick={() => handleDeleteRequest(r.id)} className="p-2 bg-destructive/10 text-destructive rounded-lg border border-destructive/20"><Trash2 className="w-3.5 h-3.5" /></button>
+                        <button onClick={() => openRequestDetail({...r, cleanMessage})} className="flex-1 py-2 bg-secondary text-muted-foreground text-[9px] font-black uppercase rounded-lg active:scale-95 transition-transform">Details</button>
+                        <button onClick={() => handleDeleteRequest(r.id)} className="p-2 bg-destructive/10 text-destructive rounded-lg border border-destructive/20 active:scale-95 transition-transform"><Trash2 className="w-3.5 h-3.5" /></button>
                       </div>
                    </div>
                  );
@@ -320,7 +320,7 @@ const UserManagement = ({ currentUser }) => {
              )}
           </div>
 
-          <div className="hidden sm:block overflow-x-auto">
+          <div className="hidden lg:block overflow-x-auto w-full">
             <table className="w-full text-left">
               <thead>
                 <tr className="bg-secondary/40 border-b border-border/40 text-[10px] uppercase font-black tracking-widest text-muted-foreground/80">
@@ -498,21 +498,21 @@ const UserManagement = ({ currentUser }) => {
           </p>
         </div>
 
-          {/* Mobile View - Cards */}
-          <div className="grid grid-cols-1 gap-4 sm:hidden p-4">
+          {/* Mobile/Tablet View - Cards (Show on everything below 1024px) */}
+          <div className="grid grid-cols-1 gap-4 lg:hidden p-4 w-full">
             {filteredUsers.map((u) => (
-              <div key={u.id} className="glass-card p-5 space-y-4 relative overflow-hidden">
-                <div className="flex justify-between items-start">
-                   <div className="flex items-center gap-3">
-                      <div className="p-2 bg-secondary rounded-lg">
+              <div key={u.id} className="glass-card p-5 space-y-4 relative overflow-hidden w-full">
+                <div className="flex justify-between items-start gap-2">
+                   <div className="flex items-center gap-3 min-w-0">
+                      <div className="p-2 bg-secondary rounded-lg shrink-0">
                         <User className={`w-4 h-4 ${u.role === 'Admin' ? 'text-primary' : 'text-muted-foreground'}`} />
                       </div>
-                      <div>
-                        <p className="text-sm font-bold text-foreground">{u.username}</p>
-                        <p className="text-[10px] text-muted-foreground">{u.email}</p>
+                      <div className="min-w-0">
+                        <p className="text-sm font-bold text-foreground truncate">{u.username}</p>
+                        <p className="text-[10px] text-muted-foreground truncate">{u.email}</p>
                       </div>
                    </div>
-                   <span className={`px-2 py-0.5 rounded text-[8px] font-bold tracking-widest border ${
+                   <span className={`shrink-0 px-2 py-0.5 rounded text-[8px] font-bold tracking-widest border ${
                       u.role === 'Admin' 
                         ? 'text-primary bg-primary/10 border-primary/20' 
                         : 'text-warning bg-warning/10 border-warning/20'
@@ -528,11 +528,11 @@ const UserManagement = ({ currentUser }) => {
                   ))}
                 </div>
                 <div className="flex gap-2 pt-4 border-t border-border/10">
-                   <button onClick={() => handleOpenModal(u)} className="flex-1 py-2 bg-primary/10 text-primary text-[9px] font-black uppercase rounded-lg">Edit</button>
+                   <button onClick={() => handleOpenModal(u)} className="flex-1 py-2 bg-primary/10 text-primary text-[9px] font-black uppercase rounded-lg active:scale-95 transition-transform">Edit</button>
                    <button 
                      onClick={() => handleDeleteClick(u)} 
                      disabled={currentUser?.username === u.username}
-                     className="flex-1 py-2 bg-destructive/10 text-destructive text-[9px] font-black uppercase rounded-lg disabled:opacity-30"
+                     className="flex-1 py-2 bg-destructive/10 text-destructive text-[9px] font-black uppercase rounded-lg disabled:opacity-30 active:scale-95 transition-transform"
                    >
                      Delete
                    </button>
@@ -541,7 +541,8 @@ const UserManagement = ({ currentUser }) => {
             ))}
           </div>
 
-          <div className="hidden sm:block overflow-x-auto">
+          {/* Desktop Table View (Show only on 1024px+) */}
+          <div className="hidden lg:block overflow-x-auto w-full">
             <table className="w-full text-left">
               <thead>
                 <tr className="bg-secondary/40 border-b border-border/40 text-[10px] uppercase font-black tracking-widest text-muted-foreground/80">

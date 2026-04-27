@@ -45,8 +45,8 @@ const TransactionList = ({ transactions, loading, onTransactionClick, user }) =>
         </div>
       )}
 
-      {/* Desktop Table View */}
-      <div className="hidden md:block glass-card overflow-hidden !p-0 border border-border/40 shadow-2xl">
+      {/* Desktop Table View (Show only on 1024px+) */}
+      <div className="hidden lg:block glass-card overflow-hidden !p-0 border border-border/40 shadow-2xl">
         <div className="overflow-x-auto">
           <table className="w-full text-left border-collapse">
             <thead>
@@ -138,27 +138,27 @@ const TransactionList = ({ transactions, loading, onTransactionClick, user }) =>
         </div>
       </div>
 
-      {/* Mobile Card View */}
-      <div className="grid grid-cols-1 gap-4 md:hidden">
+      {/* Mobile/Tablet Card View (Show on everything below 1024px) */}
+      <div className="grid grid-cols-1 gap-4 lg:hidden w-full overflow-hidden">
         {transactions.map((tx) => (
           <div
             key={tx.transactionId}
             onClick={() => onTransactionClick && onTransactionClick(tx)}
-            className="glass-card p-5 space-y-4 relative overflow-hidden active:scale-[0.98] transition-transform"
+            className="glass-card p-5 space-y-4 relative overflow-hidden active:scale-[0.98] transition-transform w-full"
           >
             <div className={`absolute top-0 left-0 w-1 h-full ${tx.isFraud ? 'bg-destructive' : tx.isMediumRisk ? 'bg-warning' : 'bg-accent'}`} />
             
-            <div className="flex justify-between items-start">
-              <div>
-                <p className="text-[10px] font-black text-muted-foreground uppercase tracking-widest mb-1">TXID: {tx.transactionId}</p>
+            <div className="flex justify-between items-start gap-2">
+              <div className="min-w-0">
+                <p className="text-[10px] font-black text-muted-foreground uppercase tracking-widest mb-1 truncate">TXID: {tx.transactionId}</p>
                 <div className="flex items-center gap-2">
-                   <span className={`px-2 py-0.5 rounded text-[10px] font-bold tracking-tight ${tx.transactionType === 'Credit' ? 'text-green-500 bg-green-500/10' : 'text-blue-500 bg-blue-500/10'}`}>
+                   <span className={`shrink-0 px-2 py-0.5 rounded text-[10px] font-bold tracking-tight ${tx.transactionType === 'Credit' ? 'text-green-500 bg-green-500/10' : 'text-blue-500 bg-blue-500/10'}`}>
                       {tx.transactionType?.toUpperCase()}
                     </span>
-                    <span className="text-xs text-muted-foreground font-medium">{tx.transactionMode}</span>
+                    <span className="text-xs text-muted-foreground font-medium truncate">{tx.transactionMode}</span>
                 </div>
               </div>
-              <div className="text-right">
+              <div className="text-right shrink-0">
                 <p className="text-lg font-bold">₹{new Intl.NumberFormat('en-IN', { minimumFractionDigits: 0 }).format(tx.amount)}</p>
                 <div className={`text-[10px] font-bold uppercase px-2 py-0.5 rounded-full inline-block mt-1 ${
                   tx.isFraud ? 'bg-destructive/10 text-destructive' : tx.isMediumRisk ? 'bg-warning/10 text-warning' : 'bg-accent/10 text-accent'
@@ -169,10 +169,10 @@ const TransactionList = ({ transactions, loading, onTransactionClick, user }) =>
             </div>
 
             <div className="grid grid-cols-2 gap-4 pt-4 border-t border-border/20">
-              <div>
+              <div className="min-w-0">
                 <p className="text-[9px] font-black text-muted-foreground uppercase tracking-tighter mb-1">Sender</p>
                 <p className="text-xs font-bold truncate">{tx.senderId}</p>
-                <div className="mt-1" onClick={e => e.stopPropagation()}>
+                <div className="mt-1 overflow-hidden" onClick={e => e.stopPropagation()}>
                    <RevealableCell
                       value={tx.senderMobile}
                       masked={maskMobile(tx.senderMobile)}
@@ -180,26 +180,26 @@ const TransactionList = ({ transactions, loading, onTransactionClick, user }) =>
                     />
                 </div>
               </div>
-              <div>
+              <div className="min-w-0">
                 <p className="text-[9px] font-black text-muted-foreground uppercase tracking-tighter mb-1">Receiver</p>
                 <p className="text-xs font-bold truncate">{tx.receiverId}</p>
               </div>
             </div>
 
             <div className="flex items-center justify-between pt-2">
-               <div className="flex items-center gap-2">
-                  <span className="text-[10px] font-bold text-muted-foreground">Score</span>
-                  <div className="w-24 h-1.5 bg-secondary rounded-full overflow-hidden">
+               <div className="flex items-center gap-2 flex-1 min-w-0">
+                  <span className="text-[10px] font-bold text-muted-foreground shrink-0">Score</span>
+                  <div className="flex-1 h-1.5 bg-secondary rounded-full overflow-hidden">
                     <div
                       className={`h-full rounded-full ${tx.isFraud ? 'bg-destructive' : tx.isMediumRisk ? 'bg-warning' : 'bg-accent'}`}
                       style={{ width: `${Math.min(100, tx.fraudScore * 100)}%` }}
                     />
                   </div>
-                  <span className={`text-xs font-black ${tx.isFraud ? 'text-destructive' : tx.isMediumRisk ? 'text-warning' : 'text-accent'}`}>
+                  <span className={`text-xs font-black shrink-0 ${tx.isFraud ? 'text-destructive' : tx.isMediumRisk ? 'text-warning' : 'text-accent'}`}>
                     {Math.round(tx.fraudScore * 100)}
                   </span>
                </div>
-               <ChevronRight className="w-5 h-5 text-muted-foreground/30" />
+               <ChevronRight className="w-5 h-5 text-muted-foreground/30 shrink-0" />
             </div>
           </div>
         ))}
