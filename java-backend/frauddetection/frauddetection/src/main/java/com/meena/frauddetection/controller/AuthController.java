@@ -89,14 +89,6 @@ public class AuthController {
         // 📧 Dispatch Welcome Email (Asynchronous to prevent signup lag)
         new Thread(() -> {
             try {
-                // Add ALL active registered admins
-                List<String> adminEmails = new ArrayList<>(
-                    userRepository.findAllByRole("Admin")
-                        .stream()
-                        .filter(User::getIsActive) // ONLY notify currently logged in admins
-                        .map(User::getEmail)
-                        .collect(Collectors.toList())
-                );
                 emailService.sendWelcomeEmail(
                     email, 
                     username, 
