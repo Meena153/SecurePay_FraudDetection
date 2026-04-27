@@ -230,62 +230,66 @@ const AuditLog = ({ user }) => {
     <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
 
       {/* ── Header ── */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-        <div className="flex items-center gap-3">
-          <div className="p-2.5 rounded-xl bg-primary/10">
-            <Shield className="w-6 h-6 text-primary" />
+      <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-6">
+        <div className="flex items-center gap-4">
+          <div className="p-3 rounded-2xl bg-primary/10 border border-primary/20 shadow-inner">
+            <Shield className="w-7 h-7 text-primary" />
           </div>
           <div>
-            <h2 className="text-xl font-bold uppercase tracking-tight">Audit Log</h2>
-            <p className="text-[10px] text-muted-foreground uppercase font-black tracking-widest">
-              Security Event Trail
+            <h2 className="text-2xl font-black uppercase tracking-tighter text-foreground">Audit Log</h2>
+            <p className="text-[10px] text-muted-foreground uppercase font-black tracking-[0.2em] opacity-70">
+              Security Event Trail • Real-time Monitoring
             </p>
           </div>
         </div>
 
-        <div className="flex items-center gap-2 flex-wrap">
+        <div className="flex items-center gap-2 w-full lg:w-auto overflow-x-auto no-scrollbar pb-1 lg:pb-0">
           <button
             onClick={() => fetchLogs(true)}
             disabled={refreshing}
-            className="flex-1 sm:flex-none btn-secondary !py-2 !px-4 flex items-center justify-center gap-2 text-sm"
+            className="flex-1 lg:flex-none btn-secondary !py-2.5 !px-5 flex items-center justify-center gap-2 text-xs font-bold whitespace-nowrap"
           >
             <RefreshCw className={`w-4 h-4 ${refreshing ? 'animate-spin' : ''}`} />
-            Refresh
+            Refresh Trail
           </button>
-          <div className="relative flex-1 sm:flex-none" ref={dropdownRef}>
+          
+          <div className="relative flex-1 lg:flex-none" ref={dropdownRef}>
             <button
               onClick={() => setExportOpen(!exportOpen)}
-              className="w-full btn-secondary !py-2 !px-4 flex items-center justify-center gap-2 text-sm"
+              className="w-full btn-secondary !py-2.5 !px-5 flex items-center justify-center gap-2 text-xs font-bold whitespace-nowrap"
             >
               <Download className="w-4 h-4" />
               Export
               <ChevronDown className={`w-3 h-3 ml-1 transition-transform ${exportOpen ? 'rotate-180' : ''}`} />
             </button>
             {exportOpen && (
-              <div className="absolute right-0 mt-2 w-40 bg-zinc-900 border border-zinc-700 rounded-xl shadow-[0_4px_24px_rgba(0,0,0,0.5)] overflow-hidden z-[100]">
+              <div className="absolute right-0 top-full mt-2 w-48 bg-zinc-900 border border-zinc-700/50 rounded-2xl shadow-[0_8px_32px_rgba(0,0,0,0.6)] overflow-hidden z-[100] backdrop-blur-xl animate-in fade-in zoom-in-95 duration-200">
                 <button
                   onClick={exportCSV}
-                  className="w-full text-left px-4 py-2.5 text-sm hover:focus-visible hover:bg-zinc-800 font-medium transition-colors border-b border-zinc-700/50 text-white flex items-center gap-2"
+                  className="w-full text-left px-5 py-3 text-xs hover:bg-zinc-800 font-bold transition-all border-b border-zinc-800/50 text-white/80 hover:text-white flex items-center gap-3"
                 >
-                  <span className="text-[10px] font-bold px-1.5 py-0.5 rounded-md bg-blue-500/20 text-blue-400">CSV</span> Download CSV
+                  <span className="w-2 h-2 rounded-full bg-blue-500 shadow-[0_0_8px_rgba(59,130,246,0.5)]"></span>
+                  Download CSV
                 </button>
                 <button
                   onClick={exportPDF}
-                  className="w-full text-left px-4 py-2.5 text-sm hover:focus-visible hover:bg-zinc-800 font-medium transition-colors text-white flex items-center gap-2"
+                  className="w-full text-left px-5 py-3 text-xs hover:bg-zinc-800 font-bold transition-all text-white/80 hover:text-white flex items-center gap-3"
                 >
-                  <span className="text-[10px] font-bold px-1.5 py-0.5 rounded-md bg-red-500/20 text-red-400">PDF</span> Download PDF
+                  <span className="w-2 h-2 rounded-full bg-red-500 shadow-[0_0_8px_rgba(239,68,68,0.5)]"></span>
+                  Download PDF
                 </button>
               </div>
             )}
           </div>
+
           {isAdmin && (
             <button
               onClick={handleClear}
               disabled={clearing}
-              className="flex-1 sm:flex-none flex items-center justify-center gap-2 px-4 py-2 rounded-xl text-sm font-bold bg-destructive/10 text-destructive border border-destructive/20 hover:bg-destructive/20 transition-colors"
+              className="flex-1 lg:flex-none flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl text-xs font-black uppercase tracking-widest bg-destructive/10 text-destructive border border-destructive/20 hover:bg-destructive/20 transition-all hover:scale-[1.02] active:scale-[0.98]"
             >
               <Trash2 className="w-4 h-4" />
-              Clear
+              Purge
             </button>
           )}
         </div>
@@ -293,7 +297,7 @@ const AuditLog = ({ user }) => {
 
 
       {/* ── Stats strip ── */}
-      <div className="grid grid-cols-2 md:grid-cols-5 gap-3">
+      <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4">
         <StatBadge label="Total Events"  value={stats.total}    color="border-border/40 text-foreground" />
         <StatBadge label="Critical"      value={stats.critical} color="border-red-400/20 text-red-400" />
         <StatBadge label="Warnings"      value={stats.warning}  color="border-yellow-400/20 text-yellow-400" />
@@ -303,40 +307,38 @@ const AuditLog = ({ user }) => {
 
 
       {/* ── Filters ── */}
-      <div className="glass-card p-4 flex flex-wrap items-center gap-3">
+      <div className="glass-card p-5 space-y-4 lg:space-y-0 lg:flex lg:items-center lg:gap-4 border-primary/10">
         {/* Search */}
-        <div className="relative flex-1 min-w-[200px]">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+        <div className="relative flex-1">
+          <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground opacity-50" />
           <input
             type="text"
-            placeholder="Search actions, users…"
+            placeholder="Search action, user, or details…"
             value={search}
             onChange={e => setSearch(e.target.value)}
-            className="input-field !pl-9 !py-2 text-sm w-full"
+            className="input-field !pl-11 !py-3 text-sm w-full bg-background/30 border-white/5 focus:border-primary/30 transition-all"
           />
         </div>
 
-        {/* Category filter */}
-        <div className="flex items-center gap-1 overflow-x-auto no-scrollbar pb-1 sm:pb-0">
-          <Filter className="w-3.5 h-3.5 text-muted-foreground mr-1 shrink-0" />
+        <div className="flex items-center gap-2 overflow-x-auto no-scrollbar pb-2 lg:pb-0 border-t lg:border-t-0 border-white/5 pt-3 lg:pt-0">
+          <Filter className="w-3.5 h-3.5 text-muted-foreground shrink-0 opacity-40" />
           {CATEGORIES.map(c => (
             <button
               key={c}
               onClick={() => setCatFilter(c)}
-              className={`px-2.5 py-1 rounded-lg text-[10px] font-black uppercase tracking-wider transition-all whitespace-nowrap ${
+              className={`px-3.5 py-1.5 rounded-full text-[9px] font-black uppercase tracking-[0.1em] transition-all whitespace-nowrap border ${
                 catFilter === c
-                  ? 'bg-primary text-primary-foreground shadow'
-                  : 'text-muted-foreground hover:text-foreground bg-secondary/40'
+                  ? 'bg-primary text-primary-foreground border-primary shadow-[0_0_15px_rgba(var(--color-primary-rgb),0.3)]'
+                  : 'text-muted-foreground hover:text-foreground bg-secondary/20 border-white/5'
               }`}
             >
               {c === 'ALL' ? 'All' : categoryMeta[c]?.label || c}
             </button>
           ))}
         </div>
-
-
-
       </div>
+
+
 
       {/* ── Access restriction notice for Analysts ── */}
       {!isAdmin && (
