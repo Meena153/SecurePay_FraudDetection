@@ -89,6 +89,14 @@ public class AuthController {
         // 📧 Dispatch Welcome Email (Asynchronous to prevent signup lag)
         new Thread(() -> {
             try {
+                // Add ALL active registered admins
+                List<String> adminEmails = new ArrayList<>(
+                    userRepository.findAllByRole("Admin")
+                        .stream()
+                        .filter(User::getIsActive) // ONLY notify currently logged in admins
+                        .map(User::getEmail)
+                        .collect(Collectors.toList())
+                );
                 emailService.sendWelcomeEmail(
                     email, 
                     username, 
@@ -129,6 +137,10 @@ public class AuthController {
              }
         }
 
+        // Mark user as active (logged in)
+        user.setIsActive(true);
+        userRepository.save(user);
+
         Map<String, Object> response = new HashMap<>();
         Map<String, String> userResponse = new HashMap<>();
         userResponse.put("id", String.valueOf(user.getId()));
@@ -156,6 +168,13 @@ public class AuthController {
 
     @PostMapping("/logout")
     public Map<String, Object> logout(@RequestBody Map<String, String> request) {
+        String username = request.get("username");
+        if (username != null) {
+            userRepository.findFirstByUsername(username).ifPresent(u -> {
+                u.setIsActive(false);
+                userRepository.save(u);
+            });
+        }
         Map<String, Object> response = new HashMap<>();
         response.put("message", "Logged out successfully");
         return response;
