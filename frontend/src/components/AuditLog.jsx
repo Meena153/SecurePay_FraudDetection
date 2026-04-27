@@ -297,7 +297,7 @@ const AuditLog = ({ user }) => {
 
 
       {/* ── Stats strip ── */}
-      <div className="grid grid-cols-2 xs:grid-cols-3 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3 sm:gap-4">
+      <div className="flex flex-wrap gap-3 sm:gap-4">
         {[
           { label: 'Total Events', value: stats.total, color: 'border-border/40 text-foreground' },
           { label: 'Critical', value: stats.critical, color: 'border-red-400/20 text-red-400' },
@@ -305,7 +305,7 @@ const AuditLog = ({ user }) => {
           { label: 'Auth Events', value: stats.auth, color: 'border-blue-400/20 text-blue-400' },
           { label: 'Config', value: stats.settings, color: 'border-yellow-400/20 text-yellow-400' }
         ].map((stat, i) => (
-          <div key={i} className="min-w-0">
+          <div key={i} className="flex-1 min-w-[calc(50%-12px)] sm:min-w-[140px] md:min-w-[160px]">
              <StatBadge label={stat.label} value={stat.value} color={stat.color} />
           </div>
         ))}
