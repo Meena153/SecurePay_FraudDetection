@@ -348,7 +348,6 @@ const Settings = ({ user, isRunning, setIsRunning, txSpeed, setTxSpeed }) => {
                     {/* In-App Alerts toggle removed as sound functionality was deleted */}
                 </div>
 
-                </div>
             </section>
 
             {/* ─── Simulation Control ─── */}
