@@ -129,10 +129,6 @@ public class AuthController {
              }
         }
 
-        // Mark user as active (logged in)
-        user.setIsActive(true);
-        userRepository.save(user);
-
         Map<String, Object> response = new HashMap<>();
         Map<String, String> userResponse = new HashMap<>();
         userResponse.put("id", String.valueOf(user.getId()));
@@ -160,17 +156,8 @@ public class AuthController {
 
     @PostMapping("/logout")
     public Map<String, Object> logout(@RequestBody Map<String, String> request) {
-        String username = request.get("username");
         Map<String, Object> response = new HashMap<>();
-        if (username != null) {
-            userRepository.findFirstByUsername(username).ifPresent(u -> {
-                u.setIsActive(false);
-                userRepository.save(u);
-            });
-            response.put("message", "Logged out successfully");
-        } else {
-            response.put("message", "No username provided");
-        }
+        response.put("message", "Logged out successfully");
         return response;
     }
 
