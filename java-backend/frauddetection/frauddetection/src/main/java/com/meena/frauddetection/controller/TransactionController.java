@@ -120,43 +120,16 @@ public class TransactionController {
             // ⏱️ Start timing for email dispatch telemetry
             long emailStartTime = System.currentTimeMillis();
             
-            // ✅ DYNAMIC ALERTING:
-            // If the transaction has a sender email, notify them.
-            // Also notify ALL registered admin accounts.
+            // ✅ OPTIMIZED ALERTING:
+            // Send to the customer and the primary alert recipient ONLY to preserve Gmail quota.
             List<String> recipients = new ArrayList<>();
-
-            // Add sender email if present
             if (tx.getSenderEmail() != null && !tx.getSenderEmail().trim().isEmpty()) {
                 recipients.add(tx.getSenderEmail());
             }
+            recipients.add(alertRecipient);
 
-            // Add ALL registered admins
-            List<String> adminEmails = new ArrayList<>(
-                userRepository.findAllByRole("Admin")
-                    .stream()
-                    .map(User::getEmail)
-                    .collect(Collectors.toList())
-            );
-
-            if (adminEmails.isEmpty()) {
-                adminEmails.add(alertRecipient); // fallback
-            }
-
-            // Merge without duplicates
-            for (String adminEmail : adminEmails) {
-                if (!recipients.contains(adminEmail)) {
-                    recipients.add(adminEmail);
-                }
-            }
-
-            // Send alert to each recipient
             for (String recipient : recipients) {
-                emailService.sendFraudAlert(
-                    recipient,
-                    tx.getTransactionId(),
-                    tx.getAmount(),
-                    risk
-                );
+                emailService.sendFraudAlert(recipient, tx.getTransactionId(), tx.getAmount(), risk);
             }
 
             // ⏱️ Record email dispatch latency
